@@ -23,7 +23,7 @@ jobs:
       - name: Download verified build from run 45065253581
         uses: actions/download-artifact@v4
         with:
-          name: lethal-offline-mobile-low
+          name: lethal-offline-mobile-low-apk
           repository: ${{ github.repository }}
           run-id: 45065253581
           github-token: ${{ secrets.GITHUB_TOKEN }}
