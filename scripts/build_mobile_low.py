@@ -280,9 +280,15 @@ def main():
     required_tex = {(x["asset_file"], int(x["path_id"])) for x in report["texture_changes"]}
     if not q_ok:
         raise RuntimeError("QualitySettings round-trip validation failed.")
-    if texture_ok != required_tex:
-        raise RuntimeError(f"Texture round-trip validation failed: {len(texture_ok)}/{len(required_tex)} found.")
-    report["roundtrip_validation"] = {"quality_profile": True, "textures": len(texture_ok)}
+    missing_textures = required_tex - texture_ok
+    if missing_textures:
+        raise RuntimeError(f"Texture round-trip validation failed: missing {len(missing_textures)} of {len(required_tex)} modified textures.")
+    report["roundtrip_validation"] = {
+        "quality_profile": True,
+        "modified_textures_required": len(required_tex),
+        "matching_textures_found": len(texture_ok),
+        "all_modified_textures_present": True,
+    }
 
     # Rewrite APK while preserving every original entry except the serialized files changed above.
     unsigned = ROOT / "output" / "LethalOffline-MobileLow-unsigned.apk"
