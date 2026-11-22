@@ -1,0 +1,153 @@
+name: Build Lethal Offline mobile-low APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/build-mobile-low.yml"
+      - "scripts/build_mobile_low.py"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Install signing and archive utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk unzip zip p7zip-full
+          java -version
+
+      - name: Download preserved original APK
+        uses: actions/download-artifact@v4
+        with:
+          name: original-apk
+          repository: ${{ github.repository }}
+          run-id: 45057515185
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+
+      - name: Download verified Android build tools
+        uses: actions/download-artifact@v4
+        with:
+          name: apk-re-tools
+          repository: ${{ github.repository }}
+          run-id: 45058791126
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: tools-download
+
+      - name: Extract APK and reassemble Unity data files
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/modified output
+          test -s input/original.apk
+          unzip -q tools-download/apk-re-tools.zip -d .
+          unzip -q input/original.apk -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path("work/apk/assets/bin/Data")
+          groups={}
+          for p in root.iterdir():
+              m=re.fullmatch(r"(.+)\.split(\d+)",p.name)
+              if m:
+                  groups.setdefault(m.group(1),[]).append((int(m.group(2)),p))
+          for name,chunks in sorted(groups.items()):
+              chunks.sort()
+              ids=[i for i,_ in chunks]
+              if ids != list(range(ids[-1]+1)):
+                  raise SystemExit(f"Missing chunk in {name}: {ids}")
+              target=root/name
+              with target.open("wb") as dst:
+                  for _,chunk in chunks:
+                      with chunk.open("rb") as src:
+                          while block:=src.read(8*1024*1024):
+                              dst.write(block)
+              for _,chunk in chunks:
+                  chunk.unlink()
+              print(name,len(chunks),target.stat().st_size)
+          PY
+
+      - name: Install UnityPy
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Patch low mobile quality and 4K textures
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "UnityPy==1.25.4"
+          python scripts/build_mobile_low.py
+
+      - name: Align, sign, and verify APK
+        run: |
+          set -euo pipefail
+          BUILD_TOOLS="tools/android/build-tools/35.0.0"
+          test -x "$BUILD_TOOLS/zipalign"
+          test -x "$BUILD_TOOLS/apksigner"
+          keytool -genkeypair -v \
+            -keystore output/mobile-low.keystore \
+            -alias mobilelow -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass changeit -keypass changeit \
+            -dname "CN=Lethal Offline Mobile Low, OU=Community Build, O=Local"
+          "$BUILD_TOOLS/zipalign" -f -p 4 \
+            output/LethalOffline-MobileLow-unsigned.apk \
+            output/LethalOffline-MobileLow-aligned.apk
+          "$BUILD_TOOLS/apksigner" sign \
+            --ks output/mobile-low.keystore --ks-key-alias mobilelow \
+            --ks-pass pass:changeit --key-pass pass:changeit \
+            --out output/LethalOffline-MobileLow.apk \
+            output/LethalOffline-MobileLow-aligned.apk
+          "$BUILD_TOOLS/zipalign" -c -v 4 output/LethalOffline-MobileLow.apk
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs output/LethalOffline-MobileLow.apk
+          "$BUILD_TOOLS/aapt" dump badging output/LethalOffline-MobileLow.apk | tee output/apk-badging.txt
+          grep -q "armeabi-v7a" output/apk-badging.txt
+          grep -q "arm64-v8a" output/apk-badging.txt
+          sha256sum output/LethalOffline-MobileLow.apk > output/LethalOffline-MobileLow.apk.sha256
+          ls -lh output/LethalOffline-MobileLow.apk output/LethalOffline-MobileLow.apk.sha256
+
+      - name: Create requested 7z package
+        run: |
+          set -euo pipefail
+          cat > output/LEEME.txt <<'EOF'
+          LETHAL OFFLINE — VARIANTE MOBILE LOW
+          
+          Incluye una APK Android con un perfil gráfico bajo por defecto.
+          Conserva el perfil High original como segundo nivel de calidad.
+          Las texturas de 4096x4096 que se pudieron decodificar se redujeron a 2048x2048.
+          Se conservan las dos arquitecturas: armeabi-v7a y arm64-v8a.
+          No se eliminaron mapas, escenas, audio, mallas, monstruos ni recursos de red.
+          
+          IMPORTANTE:
+          Esta APK está firmada con una clave nueva de esta compilación.
+          Para instalarla, desinstala primero la versión anterior; la firma no es la misma.
+          La comprobación de estructura, alineación y firma se realizó automáticamente.
+          No se ha probado la partida en un dispositivo físico.
+          Los problemas de micrófono y cámara espectador no se han corregido en esta compilación.
+          EOF
+          7z a -t7z -m0=lzma2 -mx=5 -mmt=on \
+            output/LethalOffline-MobileLow.7z \
+            output/LethalOffline-MobileLow.apk \
+            output/LethalOffline-MobileLow.apk.sha256 \
+            output/optimization-report.json \
+            output/apk-badging.txt \
+            output/LEEME.txt
+          7z t output/LethalOffline-MobileLow.7z
+          ls -lh output/LethalOffline-MobileLow.7z
+
+      - name: Upload optimized APK and 7z package
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-mobile-low
+          path: |
+            output/LethalOffline-MobileLow.7z
+            output/LethalOffline-MobileLow.apk
+            output/LethalOffline-MobileLow.apk.sha256
+            output/optimization-report.json
+            output/apk-badging.txt
+            output/LEEME.txt
+          retention-days: 30
