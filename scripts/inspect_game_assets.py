@@ -178,21 +178,47 @@ for obj in objects:
     except Exception as exc:
         exceptions.append({"kind": obj.type.name, "path_id": int(obj.path_id), "error": str(exc)[:250]})
 
-# Map MonoBehaviours to script names and their owning GameObjects.
+# Map MonoBehaviours to script names and their owning GameObjects. For IL2CPP,
+# explicitly resolve the MonoBehaviour header, then try generated typetree nodes.
+# Capture failures instead of silently treating generic headers as full component trees.
 terms = re.compile(r"fog|lens|distort|volume|post.?process|camera|spectat|death|respawn|audio|micro|voice|player|network|input|quality|ship|monitor|hdrp|sky|global|profile|spooky|fixfog|chromatic|vignette", re.I)
+typetree_attempts = 0
+typetree_successes = 0
+typetree_failures = []
 for obj in objects:
     if obj.type.name != "MonoBehaviour":
         continue
     try:
-        d = parse_dict(obj)
-        sid = ptr_id(d.get("m_Script", {}))
-        gid = ptr_id(d.get("m_GameObject", {}))
+        head = obj.parse_monobehaviour_head()
+        script_ref = getattr(head, "m_Script", None)
+        game_ref = getattr(head, "m_GameObject", None)
+        sid = ptr_id(plain(script_ref))
+        gid = ptr_id(plain(game_ref))
         script = script_map.get(sid, {})
         cls = script.get("class", "")
         ns = script.get("namespace", "")
+        assembly = script.get("assembly", "")
         go_name = gameobject_map.get(gid, "")
-        # Keep matching behaviors plus all components with missing script metadata
-        # so the report makes parsing gaps visible.
+        d = plain(head)
+        generated_fields = None
+        if typetree_status.get("enabled") and script_ref is not None:
+            try:
+                script_obj = script_ref.deref_parse_as_object()
+                cls = str(getattr(script_obj, "m_ClassName", cls) or cls)
+                ns = str(getattr(script_obj, "m_Namespace", ns) or ns)
+                assembly = str(getattr(script_obj, "m_AssemblyName", assembly) or assembly)
+                fullname = f"{ns}.{cls}" if ns else cls
+                typetree_attempts += 1
+                node = env.typetree_generator.get_nodes_up(assembly, fullname)
+                if node:
+                    generated_fields = plain(obj.read_typetree(nodes=node))
+                    typetree_successes += 1
+                else:
+                    typetree_failures.append({"class": fullname, "assembly": assembly, "error": "No nodes returned"})
+            except Exception as gen_exc:
+                typetree_failures.append({"class": cls, "assembly": assembly, "error": str(gen_exc)[:350]})
+        if generated_fields is not None:
+            d = generated_fields
         if terms.search(" ".join((cls, ns, go_name))) or not cls:
             records.append({
                 "asset_file": str(getattr(obj.assets_file, "name", "")),
@@ -202,13 +228,17 @@ for obj in objects:
                 "script_path_id": sid,
                 "script_class": cls,
                 "script_namespace": ns,
-                "script_assembly": script.get("assembly", ""),
+                "script_assembly": assembly,
                 "serialized_fields": plain(d),
+                "typetree_generated": generated_fields is not None,
             })
     except Exception as exc:
         exceptions.append({"kind": "MonoBehaviour", "path_id": int(obj.path_id), "error": str(exc)[:250]})
 
 report = {
+    "typetree_attempts": typetree_attempts,
+    "typetree_successes": typetree_successes,
+    "typetree_failures": typetree_failures[:250],
     "unitypy_version": getattr(UnityPy, "__version__", "unknown"),
     "asset_type_counts": dict(sorted(type_counts.items())),
     "mono_script_count": len(script_map),
@@ -240,6 +270,8 @@ print(json.dumps({
     "mono_script_count": report["mono_script_count"],
     "named_script_count": report["named_script_count"],
     "typetree_generator": report["typetree_generator"],
+    "typetree_attempts": report["typetree_attempts"],
+    "typetree_successes": report["typetree_successes"],
     "relevant_monobehaviour_count": len(records),
     "audio_clip_count": len(audio),
     "mesh_count": len(meshes),
