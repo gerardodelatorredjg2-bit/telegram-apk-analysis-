@@ -1,0 +1,34 @@
+name: Download original APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/download-apk.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK from temporary source
+        run: |
+          set -euo pipefail
+          URL='https://geradololiconkpol-ia-telegranm.hf.space/d/lTyJkc6DioJVi0S2WPhnqCmHycnylZSOZ7qSHuqAifs'
+          curl -fL --retry 3 --retry-delay 2 "$URL" -o original.apk
+          file original.apk
+          test -s original.apk
+          SIZE=$(stat -c%s original.apk)
+          echo "Downloaded bytes: $SIZE"
+          if [ "$SIZE" -gt 95000000 ]; then
+            echo "APK exceeds 95 MB; artifact only, do not commit it to Git."
+            exit 1
+          fi
+      - name: Save APK as Actions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-apk
+          path: original.apk
+          retention-days: 30
