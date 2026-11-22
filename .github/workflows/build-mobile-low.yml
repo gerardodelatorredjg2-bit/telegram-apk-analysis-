@@ -83,7 +83,7 @@ jobs:
       - name: Patch low mobile quality and 4K textures
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check "UnityPy==1.25.4"
+          python -m pip install --disable-pip-version-check "UnityPy==1.25.4" numpy
           python scripts/build_mobile_low.py
 
       - name: Align, sign, and verify APK
@@ -142,14 +142,29 @@ jobs:
           7z t output/LethalOffline-MobileLow.7z
           ls -lh output/LethalOffline-MobileLow.7z
 
-      - name: Upload optimized APK and 7z package
+      - name: Upload APK only
         uses: actions/upload-artifact@v4
         with:
-          name: lethal-offline-mobile-low
+          name: lethal-offline-mobile-low-apk
           path: |
-            output/LethalOffline-MobileLow.7z
             output/LethalOffline-MobileLow.apk
             output/LethalOffline-MobileLow.apk.sha256
+          compression-level: 0
+          retention-days: 30
+
+      - name: Upload requested 7z only
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-mobile-low-7z
+          path: output/LethalOffline-MobileLow.7z
+          compression-level: 0
+          retention-days: 30
+
+      - name: Upload optimization report
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-mobile-low-report
+          path: |
             output/optimization-report.json
             output/apk-badging.txt
             output/LEEME.txt
