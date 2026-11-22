@@ -8291,8 +8291,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 990,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3159,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8307,8 +8314,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1117,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3175,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8323,8 +8337,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1134,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3178,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8339,8 +8360,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1162,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3181,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8355,8 +8383,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1179,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3188,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8371,22 +8406,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1465,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2655,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2040,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -8401,8 +8436,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 286,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -8417,29 +8452,43 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 287,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 551,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 735,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 663,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 734,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 654,
+          "type": "AudioListener",
           "name": "",
           "script": null,
           "properties": {}
@@ -8454,15 +8503,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 295,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 552,
+          "type": "Camera",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 740,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8477,8 +8533,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 297,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 741,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8493,8 +8556,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 299,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 744,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8509,15 +8579,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 339,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 661,
+          "type": "Animator",
           "name": "",
           "script": null,
           "properties": {}
@@ -8532,8 +8602,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 347,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 761,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8548,8 +8625,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2359,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7572,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8564,8 +8648,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2420,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7576,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8580,8 +8671,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2462,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7581,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8596,8 +8694,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2612,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7591,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8612,8 +8717,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2613,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7592,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8628,8 +8740,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2690,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7601,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8644,8 +8763,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2723,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7607,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8660,22 +8786,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3309,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6367,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4972,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -8690,8 +8816,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 875,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3314,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8706,8 +8839,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 948,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3324,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8722,8 +8862,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1077,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3338,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8738,8 +8885,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1118,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3341,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8754,8 +8908,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1196,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3354,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8770,22 +8931,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1409,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2776,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2080,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -8800,8 +8961,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1419,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5403,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8816,8 +8984,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1591,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5425,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8832,8 +9007,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1637,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5434,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8848,8 +9030,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1653,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5439,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8864,8 +9053,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1810,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5462,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8880,22 +9076,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1902,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4391,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3168,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -8910,22 +9106,29 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 46,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 24,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 25,
+          "type": "AudioListener",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 65,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8940,8 +9143,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 23,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 72,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8956,8 +9166,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1541,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5757,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8972,8 +9189,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1590,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5763,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -8988,8 +9212,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1593,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5764,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9004,8 +9235,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1705,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5785,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9020,8 +9258,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1871,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5817,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9036,8 +9281,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1919,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5822,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9052,8 +9304,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1928,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5824,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9068,8 +9327,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2021,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5842,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9084,8 +9350,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2048,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5846,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9100,8 +9373,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2220,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5874,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9116,8 +9396,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2249,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5881,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9132,8 +9419,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2280,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5889,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9148,22 +9442,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2386,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4733,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3605,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -9178,22 +9472,29 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 143,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 73,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 74,
+          "type": "AudioListener",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 223,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9208,8 +9509,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 160,
+          "type": "RectTransform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 242,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9224,15 +9532,22 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 165,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 111,
+          "type": "CanvasRenderer",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 250,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9247,15 +9562,22 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 173,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 117,
+          "type": "CanvasRenderer",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 255,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9270,8 +9592,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 71,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 260,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9286,8 +9615,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2188,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7075,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9302,8 +9638,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2331,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7099,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9318,8 +9661,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2379,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7104,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9334,8 +9684,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2403,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7110,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9350,8 +9707,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2604,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7136,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9366,22 +9730,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2700,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5523,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4435,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -9396,8 +9760,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1650,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6264,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9412,8 +9783,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1734,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6279,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9428,36 +9806,43 @@
       "layer": 13,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1797,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4267,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3299,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5248,
+          "type": "BoxCollider",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5128,
+          "type": "Rigidbody",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6291,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9472,8 +9857,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1866,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6300,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9488,8 +9880,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1898,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6305,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9504,8 +9903,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1914,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6307,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9520,8 +9926,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1919,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6309,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9536,8 +9949,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2003,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6326,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9552,8 +9972,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2112,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6344,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9568,8 +9995,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2152,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6351,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9584,22 +10018,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2212,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5031,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3660,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -9614,8 +10048,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1438,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4953,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9630,8 +10071,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1515,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4969,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9646,8 +10094,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1676,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4997,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9662,8 +10117,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1725,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5010,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9678,8 +10140,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1816,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5023,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9694,8 +10163,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1879,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5033,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9710,8 +10186,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1937,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5041,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9726,8 +10209,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2428,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -9742,8 +10225,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2427,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -9758,22 +10241,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2331,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2719,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5173,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4825,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5073,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9788,22 +10285,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2341,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2720,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5174,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4824,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5072,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9818,22 +10329,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2092,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4181,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3262,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -9848,22 +10359,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2445,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2717,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5202,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4822,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5246,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9878,22 +10403,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2444,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2718,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5201,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4823,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 5247,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9908,8 +10447,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1000,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3303,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9924,22 +10470,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1048,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2357,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1839,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -9954,8 +10500,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1135,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3339,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9970,8 +10523,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1178,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3347,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -9986,8 +10546,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1397,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3393,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10002,22 +10569,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1487,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2748,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2109,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -10032,8 +10599,15 @@
       "layer": 30,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 8105,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 18201,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10048,8 +10622,8 @@
       "layer": 30,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 12428,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -10064,22 +10638,22 @@
       "layer": 14,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 10648,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 14488,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 13418,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -10094,8 +10668,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 8074,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -10110,29 +10684,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 8751,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 13982,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 13393,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 18132,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 16596,
+          "type": "Animator",
           "name": "",
           "script": null,
           "properties": {}
@@ -10147,8 +10728,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 9223,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -10163,8 +10744,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 9189,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 17745,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10179,8 +10767,15 @@
       "layer": 30,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 12655,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 18787,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10195,8 +10790,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 8229,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -10211,22 +10806,29 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 45,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 24,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 25,
+          "type": "AudioListener",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 63,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10241,8 +10843,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 22,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 70,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10257,8 +10866,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3022,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 10001,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10273,8 +10889,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3059,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 10004,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10289,8 +10912,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3194,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 10015,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10305,8 +10935,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3252,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 10018,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10321,8 +10958,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3279,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 10024,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10337,22 +10981,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3605,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7788,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6207,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -10367,8 +11011,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 928,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 2853,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10383,8 +11034,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1010,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 2866,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10399,8 +11057,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1020,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 2867,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10415,8 +11080,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1038,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 2868,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10431,8 +11103,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1046,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 2874,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10447,22 +11126,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1223,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2391,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1907,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -10477,8 +11156,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 970,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3216,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10493,8 +11179,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1096,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3235,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10509,8 +11202,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1107,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3236,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10525,8 +11225,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1135,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3239,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10541,8 +11248,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1222,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 3255,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10557,22 +11271,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1429,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2711,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2053,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -10587,8 +11301,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 211,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -10603,29 +11317,43 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 212,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 392,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 676,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 585,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 675,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 552,
+          "type": "AudioListener",
           "name": "",
           "script": null,
           "properties": {}
@@ -10640,15 +11368,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 228,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 393,
+          "type": "Camera",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 681,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10663,8 +11398,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 231,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 682,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10679,8 +11421,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 233,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 684,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10695,15 +11444,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 290,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 582,
+          "type": "Animator",
           "name": "",
           "script": null,
           "properties": {}
@@ -10718,8 +11467,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 297,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 708,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10734,22 +11490,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 369,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 529,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 437,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -10764,8 +11520,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 463,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 1675,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10780,22 +11543,29 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1120,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 466,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 467,
+          "type": "AudioListener",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 1686,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10810,8 +11580,8 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1149,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
@@ -10826,15 +11596,22 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1269,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 829,
+          "type": "CanvasRenderer",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 1818,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10849,8 +11626,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1271,
+          "type": "RectTransform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 1822,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10865,15 +11649,22 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 1273,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 832,
+          "type": "CanvasRenderer",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 1823,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10888,15 +11679,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2325,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3640,
+          "type": "Camera",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6951,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10911,22 +11709,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2337,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3924,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3671,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -10941,8 +11739,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2340,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -10957,8 +11755,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2347,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6991,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -10973,15 +11778,22 @@
       "layer": 8,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2348,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6992,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4219,
+          "type": "BoxCollider",
           "name": "",
           "script": null,
           "properties": {}
@@ -10996,8 +11808,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2352,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6997,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11012,15 +11831,29 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2357,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3641,
+          "type": "Camera",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7000,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 6999,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11035,22 +11868,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2369,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3933,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3680,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -11065,8 +11898,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2376,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7021,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11081,8 +11921,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2392,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11097,22 +11937,43 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2395,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3642,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7063,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4619,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7062,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7064,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11127,15 +11988,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2407,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3643,
+          "type": "Camera",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7080,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11150,8 +12018,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2410,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7083,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7084,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11166,8 +12048,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2423,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7117,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11182,8 +12071,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2442,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11198,22 +12087,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2457,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3957,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3698,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -11228,15 +12117,22 @@
       "layer": 14,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2459,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3644,
+          "type": "Camera",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7171,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11251,8 +12147,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2470,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7199,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11267,8 +12170,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2472,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7203,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11283,8 +12193,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2482,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7221,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11299,8 +12216,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2487,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11315,8 +12232,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2508,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11331,8 +12248,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2518,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11347,15 +12264,22 @@
       "layer": 14,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2522,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7280,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4264,
+          "type": "BoxCollider",
           "name": "",
           "script": null,
           "properties": {}
@@ -11370,8 +12294,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2533,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11386,29 +12310,29 @@
       "layer": 14,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2543,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3981,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3721,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4556,
+          "type": "Animator",
           "name": "",
           "script": null,
           "properties": {}
@@ -11423,8 +12347,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2544,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7319,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11439,22 +12370,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2569,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3990,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3730,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -11469,8 +12400,15 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2607,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7408,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11485,15 +12423,29 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2610,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3645,
+          "type": "Camera",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7412,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7413,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11508,22 +12460,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2628,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4010,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3749,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -11538,15 +12490,22 @@
       "layer": 14,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2646,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7489,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4305,
+          "type": "BoxCollider",
           "name": "",
           "script": null,
           "properties": {}
@@ -11561,15 +12520,22 @@
       "layer": 8,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2663,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7523,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4313,
+          "type": "BoxCollider",
           "name": "",
           "script": null,
           "properties": {}
@@ -11584,8 +12550,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2673,
+          "type": "Transform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7537,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11600,22 +12573,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3488,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4115,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3780,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -11630,8 +12603,8 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6354,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11646,22 +12619,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2815,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3646,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7597,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4661,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7739,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11676,22 +12663,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2833,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3647,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7602,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4662,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7740,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11706,22 +12707,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2848,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3648,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7607,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4660,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7738,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11736,22 +12751,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2890,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3649,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7622,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4659,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7741,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11766,15 +12795,22 @@
       "layer": 15,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3426,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7591,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4385,
+          "type": "BoxCollider",
           "name": "",
           "script": null,
           "properties": {}
@@ -11789,8 +12825,8 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6371,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11805,8 +12841,8 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6372,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11821,8 +12857,8 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6370,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11837,15 +12873,22 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6327,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5382,
+          "type": "CanvasRenderer",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7697,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11860,8 +12903,15 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6329,
+          "type": "RectTransform",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7701,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11876,15 +12926,22 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6330,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 5384,
+          "type": "CanvasRenderer",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7702,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -11899,8 +12956,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3153,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11915,8 +12972,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3154,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11931,8 +12988,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3155,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11947,8 +13004,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3156,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11963,8 +13020,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2973,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11979,8 +13036,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2972,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -11995,8 +13052,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2971,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -12011,8 +13068,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2970,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -12027,22 +13084,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2934,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3657,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7572,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4647,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7845,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -12057,22 +13128,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2933,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3654,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7575,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4648,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7846,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -12087,22 +13172,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2932,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3655,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7573,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4650,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7848,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -12117,22 +13216,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 2931,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3656,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 7574,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 4649,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7847,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -12147,15 +13260,22 @@
       "layer": 29,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3019,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3658,
+          "type": "Camera",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 7944,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -12170,22 +13290,22 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3265,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 4058,
+          "type": "MeshFilter",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 3873,
+          "type": "MeshRenderer",
           "name": "",
           "script": null,
           "properties": {}
@@ -12200,8 +13320,8 @@
       "layer": 5,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 6468,
+          "type": "RectTransform",
           "name": "",
           "script": null,
           "properties": {}
@@ -12216,8 +13336,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 12532,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -12232,22 +13352,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 18022,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 21661,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 36807,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 32551,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 37411,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -12262,22 +13396,36 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 18394,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 21659,
+          "type": "Camera",
           "name": "",
           "script": null,
           "properties": {}
         },
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 36676,
+          "type": "MonoBehaviour",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 32731,
+          "type": "Light",
+          "name": "",
+          "script": null,
+          "properties": {}
+        },
+        {
+          "component_path_id": 37362,
+          "type": "MonoBehaviour",
           "name": "",
           "script": null,
           "properties": {}
@@ -12292,8 +13440,8 @@
       "layer": 0,
       "components": [
         {
-          "component_path_id": 0,
-          "type": "Unknown",
+          "component_path_id": 19212,
+          "type": "Transform",
           "name": "",
           "script": null,
           "properties": {}
@@ -12301,6 +13449,31 @@
       ]
     }
   ],
-  "relevant_monobehaviours": [],
+  "relevant_monobehaviours": [
+    {
+      "asset_file": "level3",
+      "path_id": 7074,
+      "script": {
+        "class": "EclipseWeather",
+        "namespace": "",
+        "assembly": "LethalRecovered.Gameplay.dll",
+        "script_path_id": 1049
+      },
+      "game_object": "Eclipse",
+      "game_object_path_id": 260,
+      "properties": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 260
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 1049
+        },
+        "m_Name": ""
+      }
+    }
+  ],
   "notes": "Inspection only; no gameplay assets modified."
 }
