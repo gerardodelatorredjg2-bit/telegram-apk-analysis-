@@ -30,9 +30,10 @@ jobs:
           test -s downloaded/LethalOffline-MobileLow.7z
           test -s downloaded/LethalOffline-MobileLow.apk
           7z t downloaded/LethalOffline-MobileLow.7z
-          sha256sum -c downloaded/LethalOffline-MobileLow.apk.sha256
+          (cd downloaded && sha256sum -c <(sed 's#output/##g' LethalOffline-MobileLow.apk.sha256))
           mkdir -p release/apk release/archive release/report
-          cp downloaded/LethalOffline-MobileLow.apk downloaded/LethalOffline-MobileLow.apk.sha256 release/apk/
+          cp downloaded/LethalOffline-MobileLow.apk release/apk/
+          sed 's#output/##g' downloaded/LethalOffline-MobileLow.apk.sha256 > release/apk/LethalOffline-MobileLow.apk.sha256
           cp downloaded/LethalOffline-MobileLow.7z release/archive/
           cp downloaded/optimization-report.json downloaded/apk-badging.txt downloaded/LEEME.txt release/report/
           du -h release/apk/* release/archive/* release/report/*
