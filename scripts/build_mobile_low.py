@@ -266,7 +266,7 @@ def main():
             q_ok = (
                 len(profs) >= 2
                 and getattr(profs[0], "name", "") == "Low (Mobile)"
-                and int(q.m_DefaultMobileQuality) == 0
+                and int(q.m_CurrentQuality) == 0
                 and float(profs[0].shadowDistance) == 15.0
             )
         elif obj.type.name == "Texture2D":
