@@ -219,12 +219,22 @@ def main():
         outputs[name] = path
         report["saved_asset_files"][name] = {"bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
 
-    # Recreate Unity's 1 MiB split-file naming for files that were split in the original APK.
+    # Recreate Unity's 1 MiB split-file naming from the original APK's entry list.
+    # The earlier extraction step has already joined and deleted the original split fragments.
+    with zipfile.ZipFile(APK, "r") as original_zip:
+        original_names = set(original_zip.namelist())
     replacements = {}
     for name, path in outputs.items():
-        original_chunks = sorted(DATA.glob(name + ".split[0-9]*"))
-        if original_chunks:
-            for old in original_chunks:
+        prefix = f"assets/bin/Data/{name}.split"
+        had_split = any(
+            entry.startswith(prefix) and entry[len(prefix):].isdigit()
+            for entry in original_names
+        )
+        if had_split:
+            merged = DATA / name
+            if merged.exists():
+                merged.unlink()
+            for old in DATA.glob(name + ".split[0-9]*"):
                 old.unlink()
             with path.open("rb") as src:
                 index = 0
