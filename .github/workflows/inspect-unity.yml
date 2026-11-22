@@ -1,4 +1,4 @@
-name: Inspect Lethal Offline Unity assets
+name: Inspect Lethal Offline Unity assets (revision 2)
 
 on:
   workflow_dispatch:
