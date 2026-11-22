@@ -261,10 +261,10 @@ def main():
                 t = obj.parse_as_object()
                 if int(t.m_Width) == 2048 and int(t.m_Height) == 2048:
                     if int(obj.path_id) in {int(x["path_id"]) for x in report["texture_changes"]}:
-                        texture_ok.add(int(obj.path_id))
+                        texture_ok.add((str(getattr(obj.assets_file, "name", "")), int(obj.path_id)))
             except Exception:
                 pass
-    required_tex = {int(x["path_id"]) for x in report["texture_changes"]}
+    required_tex = {(x["asset_file"], int(x["path_id"])) for x in report["texture_changes"]}
     if not q_ok:
         raise RuntimeError("QualitySettings round-trip validation failed.")
     if texture_ok != required_tex:
@@ -298,21 +298,21 @@ def main():
                 if skip:
                     continue
                 # Old v1 signatures no longer apply after modifying the archive.
-                if filename.upper().startswith("META-INF/") and filename.upper().endswith((".SF", ".RSA", ".DSA", ".EC")):
+                if filename.upper().startswith("META-INF/") and filename.upper().endswith((".SF", ".RSA", ".DSA", ".EC", "MANIFEST.MF")):
                     continue
                 with zin.open(info, "r") as src, zout.open(info, "w") as dst:
                     shutil.copyfileobj(src, dst, length=8 * 1024 * 1024)
 
             # Restore modified files under exactly the original Unity path scheme.
             for filename, path in replacements.items():
-                base = filename.split("/assets/bin/Data/", 1)[-1]
+                rel = filename.removeprefix("assets/bin/Data/")
                 # Keep the archive's original storage/deflate choice for this asset family.
-                base_asset = next((k for k in base_names if filename.startswith(f"assets/bin/Data/{k}.split")), None)
+                base_asset = next((k for k in base_names if rel == k or rel.startswith(k + ".split")), None)
                 if base_asset is not None and base_asset in chunk_compression:
                     ctype = chunk_compression[base_asset].compress_type
                     dt = chunk_compression[base_asset].date_time
                 else:
-                    original_info = direct_infos.get(base)
+                    original_info = direct_infos.get(rel)
                     ctype = original_info.compress_type if original_info else zipfile.ZIP_STORED
                     dt = original_info.date_time if original_info else (2026, 1, 1, 0, 0, 0)
                 zi = zipfile.ZipInfo(filename, date_time=dt)
