@@ -25,7 +25,7 @@ jobs:
           curl -fL --retry 3 https://github.com/skylot/jadx/releases/download/v1.5.1/jadx-1.5.1.zip -o /tmp/jadx.zip
           unzip -q /tmp/jadx.zip -d tools/jadx
           curl -fL --retry 3 https://github.com/iBotPeaches/Apktool/releases/download/v2.10.0/apktool_2.10.0.jar -o tools/bin/apktool.jar
-          curl -fL --retry 3 https://github.com/JesusFreke/smali/releases/download/v2.5.2/baksmali-2.5.2.jar -o tools/bin/baksmali.jar
+          curl -fL --retry 3 https://repo.maven.apache.org/maven2/org/smali/baksmali/2.5.2/baksmali-2.5.2.jar -o tools/bin/baksmali.jar
           curl -fL --retry 3 https://github.com/pxb1988/dex2jar/releases/download/v2.4/dex-tools-v2.4.zip -o /tmp/dex2jar.zip
           unzip -q /tmp/dex2jar.zip -d tools/dex2jar
           curl -fL --retry 3 https://github.com/google/bundletool/releases/download/1.17.2/bundletool-all-1.17.2.jar -o tools/bin/bundletool.jar
