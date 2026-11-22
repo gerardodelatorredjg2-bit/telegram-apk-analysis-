@@ -365,7 +365,7 @@ def main():
                     direct_infos[base] = info
                 elif re.fullmatch(re.escape(direct) + r"\.split\d+", filename):
                     chunk_compression[base] = info
-        with zipfile.ZipFile(unsigned, "w", allowZip64=True, compression=zipfile.ZIP_DEFLATED, compresslevel=6) as zout:
+        with zipfile.ZipFile(unsigned, "w", allowZip64=True, compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zout:
             for info in infos:
                 filename = info.filename
                 skip = False
@@ -400,7 +400,7 @@ def main():
                 with path.open("rb") as src, zout.open(zi, "w") as dst:
                     shutil.copyfileobj(src, dst, length=8 * 1024 * 1024)
 
-    report["apk"] = {"original_bytes": APK.stat().st_size, "unsigned_bytes": unsigned.stat().st_size}
+    report["apk"] = {"original_bytes": APK.stat().st_size, "unsigned_bytes": unsigned.stat().st_size, "zip_deflate_level": 9}
     report["apk"]["unsigned_sha256"] = sha256(unsigned)
     (OUT / "optimization-report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
     print(json.dumps({
