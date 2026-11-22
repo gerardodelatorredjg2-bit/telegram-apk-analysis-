@@ -1,0 +1,173 @@
+name: Inspect Lethal Offline Unity assets
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/inspect-unity.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Prepare workspace
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip zip xz-utils
+          mkdir -p input work output
+
+      - name: Download preserved original APK
+        uses: actions/download-artifact@v4
+        with:
+          name: original-apk
+          repository: ${{ github.repository }}
+          run-id: 45057515185
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+
+      - name: Extract APK and Unity files
+        run: |
+          set -euo pipefail
+          unzip -q input/original.apk -d work/apk
+          DATA="work/apk/assets/bin/Data"
+          test -s "$DATA/Managed/Metadata/global-metadata.dat"
+          test -s work/apk/lib/armeabi-v7a/libil2cpp.so
+          test -s work/apk/lib/arm64-v8a/libil2cpp.so
+          cp "$DATA/Managed/Metadata/global-metadata.dat" work/global-metadata.dat
+          cp work/apk/lib/armeabi-v7a/libil2cpp.so work/libil2cpp-armv7.so
+          cp work/apk/lib/arm64-v8a/libil2cpp.so work/libil2cpp-arm64.so
+          cat > work/apk_identity.txt <<'EOF'
+          Package: com.local.lethaloffline.fullgame
+          Version: 1.3-unlimited-stamina (versionCode 5)
+          Unity: 2022.3.62f2
+          Min SDK: 29
+          Target SDK: 35
+          Native ABIs: armeabi-v7a, arm64-v8a
+          EOF
+
+      - name: Reassemble Unity split asset files
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path("work/apk/assets/bin/Data")
+          groups={}
+          for p in root.iterdir():
+              m=re.fullmatch(r"(.+)\.split(\d+)",p.name)
+              if m:
+                  groups.setdefault(m.group(1),[]).append((int(m.group(2)),p))
+          lines=[]
+          for name,chunks in sorted(groups.items()):
+              chunks.sort()
+              ids=[i for i,_ in chunks]
+              if ids != list(range(ids[-1]+1)):
+                  raise SystemExit(f"Missing chunk in {name}")
+              out=root/name
+              with out.open("wb") as dst:
+                  for _,p in chunks:
+                      with p.open("rb") as src:
+                          while block:=src.read(8*1024*1024):
+                              dst.write(block)
+              for _,p in chunks:
+                  p.unlink()
+              lines.append(f"{name}\t{len(chunks)} chunks\t{out.stat().st_size} bytes")
+          Path("output/reassembled_files.tsv").write_text("\n".join(lines)+"\n")
+          print("\n".join(lines))
+          PY
+
+      - name: Install Unity asset inspector
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Inventory Unity assets
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check UnityPy
+          python - <<'PY'
+          import UnityPy, json
+          from pathlib import Path
+          from collections import Counter
+          root=Path("work/apk/assets/bin/Data")
+          report={"unitypy_version":getattr(UnityPy,"__version__","unknown"),"type_counts":{},"asset_files":[],"samples":{},"read_errors":[]}
+          env=UnityPy.load(str(root))
+          report["asset_files"]=sorted({str(getattr(o.assets_file,"name","")) for o in env.objects})
+          counts=Counter()
+          samples={}
+          for obj in env.objects:
+              typ=obj.type.name
+              counts[typ]+=1
+              if len(samples.setdefault(typ,[]))<20:
+                  try:
+                      d=obj.read()
+                      name=getattr(d,"m_Name",None) or getattr(d,"name",None) or ""
+                      item={"name":str(name)[:180],"path_id":int(obj.path_id),"file":str(getattr(obj.assets_file,"name",""))}
+                      if typ=="Texture2D":
+                          item.update(width=getattr(d,"m_Width",None),height=getattr(d,"m_Height",None),format=str(getattr(d,"m_TextureFormat",None)))
+                      elif typ=="AudioClip":
+                          item.update(channels=getattr(d,"m_Channels",None),frequency=getattr(d,"m_Frequency",None),length=getattr(d,"m_Length",None))
+                      elif typ=="Mesh":
+                          item.update(vertices=len(getattr(d,"m_Vertices",[]) or []),submeshes=len(getattr(d,"m_SubMeshes",[]) or []))
+                      samples[typ].append(item)
+                  except Exception as e:
+                      report["read_errors"].append({"type":typ,"path_id":int(obj.path_id),"error":str(e)[:300]})
+          report["type_counts"]=dict(counts.most_common())
+          report["samples"]=samples
+          Path("output/unity_inventory.json").write_text(json.dumps(report,indent=2,ensure_ascii=False))
+          print(json.dumps(report["type_counts"],indent=2))
+          print("objects",sum(counts.values()),"read errors",len(report["read_errors"]))
+          PY
+
+      - name: Restore IL2CPP symbols and managed metadata
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          curl -fL --retry 3 https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.46/Il2CppDumper-net6-v6.7.46.zip -o /tmp/il2cppdumper.zip
+          mkdir -p /tmp/il2cppdumper
+          unzip -q /tmp/il2cppdumper.zip -d /tmp/il2cppdumper
+          curl -fL --retry 3 https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+          bash /tmp/dotnet-install.sh --channel 6.0 --install-dir /tmp/dotnet
+          /tmp/dotnet/dotnet /tmp/il2cppdumper/Il2CppDumper.dll work/libil2cpp-armv7.so work/global-metadata.dat output/il2cpp-dump 2>&1 | tee output/il2cpp-dumper.log
+
+      - name: Create analysis report
+        if: always()
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          lines=["# Lethal Offline — análisis técnico del APK",""]
+          ident=Path("work/apk_identity.txt")
+          if ident.exists(): lines += [ident.read_text(),""]
+          inv=Path("output/unity_inventory.json")
+          if inv.exists():
+              d=json.loads(inv.read_text())
+              lines += ["## Inventario de Unity","",f"UnityPy: {d.get('unitypy_version')}",f"Archivos Unity: {len(d.get('asset_files',[]))}",f"Objetos analizados: {sum(d.get('type_counts',{}).values())}","", "| Tipo | Cantidad |","|---|---:|"]
+              lines += [f"| {k} | {v} |" for k,v in d.get("type_counts",{}).items()]
+              lines += ["","## Muestras de recursos",""]
+              for typ in ("Texture2D","Mesh","AudioClip","MonoBehaviour","GameObject","Material","Shader"):
+                  if typ in d.get("samples",{}):
+                      lines.append(f"### {typ}")
+                      for x in d["samples"][typ][:12]:
+                          lines.append(f"- {x.get('name') or '(sin nombre)'} — {x.get('file')} — pathID {x.get('path_id')}")
+                      lines.append("")
+          log=Path("output/il2cpp-dumper.log")
+          if log.exists(): lines += ["## Resultado IL2CPP","", "Inicio del log:", log.read_text(errors="replace")[-12000:]]
+          lines += ["","## Estado","", "Este informe es un diagnóstico; no modifica el APK ni afirma que el juego esté reparado."]
+          Path("output/analysis_report.md").write_text("\n".join(lines))
+          PY
+          zip -qr lethal-offline-analysis.zip output
+          ls -lh lethal-offline-analysis.zip
+
+      - name: Upload analysis artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-analysis
+          path: lethal-offline-analysis.zip
+          retention-days: 30
