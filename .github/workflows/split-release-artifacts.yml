@@ -48,9 +48,11 @@ jobs:
           )
           7z t release/LethalOffline-MobileLow-APK.7z
           7z x -y -orextracted release/LethalOffline-MobileLow-APK.7z
-          cmp "downloaded/$APK" "extracted/$APK"
+          EXTRACTED="$(find extracted -type f -name "$APK" -print -quit)"
+          test -n "$EXTRACTED"
+          cmp "downloaded/$APK" "$EXTRACTED"
           test "$(find extracted -type f | wc -l)" -eq 1
-          sha256sum "extracted/$APK" | tee release/LethalOffline-MobileLow-APK.sha256
+          sha256sum "$EXTRACTED" | tee release/LethalOffline-MobileLow-APK.sha256
           stat -c 'APK bytes: %s' "downloaded/$APK"
           stat -c '7z bytes: %s' "release/LethalOffline-MobileLow-APK.7z"
           7z l -ba release/LethalOffline-MobileLow-APK.7z
