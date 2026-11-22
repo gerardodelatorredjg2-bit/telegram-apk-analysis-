@@ -45,6 +45,10 @@ def main():
     env = UnityPy.load(str(DATA))
     objects = list(env.objects)
     scripts = {}
+    objects_by_file_path = {
+        (str(attr(attr(obj, "assets_file"), "name", "")), int(obj.path_id)): obj
+        for obj in objects
+    }
     for obj in objects:
         if attr(attr(obj, "type"), "name") != "MonoScript":
             continue
@@ -79,7 +83,9 @@ def main():
             components = []
             for pair in attr(go, "m_Component", []) or []:
                 ptr = attr(pair, "component")
-                comp_obj = pptr_read(ptr)
+                comp_path_id = int(attr(ptr, "path_id", 0) or 0)
+                go_asset = str(attr(attr(obj, "assets_file"), "name", ""))
+                comp_obj = objects_by_file_path.get((go_asset, comp_path_id))
                 if comp_obj is None:
                     continue
                 comp_kind = attr(attr(comp_obj, "type"), "name", "Unknown")
@@ -91,20 +97,19 @@ def main():
                     comp_name = str(attr(comp_data, "m_Name", "") or "")
                     if comp_kind == "MonoBehaviour":
                         sp = attr(comp_data, "m_Script")
-                        so = pptr_read(sp)
-                        if so is not None:
-                            sd = so.parse_as_object()
+                        sd = pptr_read(sp)
+                        if sd is not None:
                             script = {
                                 "class": as_text(attr(sd, "m_ClassName")),
                                 "namespace": as_text(attr(sd, "m_Namespace")),
                                 "assembly": as_text(attr(sd, "m_AssemblyName")),
-                                "script_path_id": int(attr(so, "path_id", 0) or 0)
+                                "script_path_id": int(attr(sp, "path_id", 0) or 0)
                             }
                         props = typed_tree(comp_obj)
                 except Exception:
                     pass
                 components.append({
-                    "component_path_id": int(attr(comp_obj, "path_id", 0) or 0),
+                    "component_path_id": comp_path_id,
                     "type": comp_kind,
                     "name": comp_name,
                     "script": script,
@@ -125,12 +130,8 @@ def main():
             except Exception:
                 continue
             sp = attr(data, "m_Script")
-            so = pptr_read(sp)
-            if so is None:
-                continue
-            try:
-                sd = so.parse_as_object()
-            except Exception:
+            sd = pptr_read(sp)
+            if sd is None:
                 continue
             cls = str(attr(sd, "m_ClassName", "") or "")
             ns = str(attr(sd, "m_Namespace", "") or "")
