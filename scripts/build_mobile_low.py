@@ -122,6 +122,30 @@ def patch_player_settings(obj):
         return {"qualitySettingsNames": settings.qualitySettingsNames}
     raise RuntimeError("PlayerSettings.qualitySettingsNames is empty; cannot safely sync quality indices.")
 
+def resolve_monobehaviour_class(obj):
+    """Resolve a MonoBehaviour class name through its MonoScript reference."""
+    head = obj.parse_monobehaviour_head()
+    script = head.m_Script.deref_parse_as_object()
+    return (
+        str(getattr(script, "m_ClassName", "") or ""),
+        str(getattr(script, "m_Namespace", "") or ""),
+        str(getattr(script, "m_AssemblyName", "") or ""),
+    )
+
+def disable_component_raw(obj, class_name):
+    """Disable MonoBehaviour m_Enabled at byte offset 12 after validating raw size."""
+    raw = bytearray(obj.get_raw_data())
+    # MonoBehaviour header: GameObject PPtr (12 bytes), m_Enabled (1 byte).
+    if len(raw) <= 12:
+        raise RuntimeError(f"{class_name} path_id={obj.path_id}: raw data too short")
+    if raw[12] not in (0, 1):
+        raise RuntimeError(f"{class_name} path_id={obj.path_id}: unexpected m_Enabled byte {raw[12]}")
+    if raw[12] == 0:
+        return False
+    raw[12] = 0
+    obj.set_raw_data(bytes(raw))
+    return True
+
 def main():
     if not APK.exists():
         raise FileNotFoundError(APK)
@@ -159,6 +183,36 @@ def main():
     patch_quality(quality_obj, report)
     report["player_settings"] = patch_player_settings(player_obj)
     changed_files[id(quality_obj.assets_file)] = quality_obj.assets_file
+
+    # Targeted HDRP fog and lens-distortion component toggles. Original APK is
+    # retained as the immutable input; only the working extracted assets change.
+    targeted_component_changes = []
+    target_classes = {"LensDistortion", "Fog", "LocalVolumetricFog"}
+    for obj in env.objects:
+        if obj.type.name != "MonoBehaviour":
+            continue
+        try:
+            class_name, namespace, assembly = resolve_monobehaviour_class(obj)
+            if class_name not in target_classes:
+                continue
+            if disable_component_raw(obj, class_name):
+                changed_files[id(obj.assets_file)] = obj.assets_file
+                targeted_component_changes.append({
+                    "class": class_name, "namespace": namespace, "assembly": assembly,
+                    "asset_file": str(getattr(obj.assets_file, "name", "")),
+                    "path_id": int(obj.path_id), "enabled": False,
+                })
+        except Exception as exc:
+            report.setdefault("component_patch_skips", []).append({
+                "path_id": int(obj.path_id), "reason": str(exc)[:300],
+            })
+    report["component_changes"] = targeted_component_changes
+    counts = {}
+    for item in targeted_component_changes:
+        counts[item["class"]] = counts.get(item["class"], 0) + 1
+    report["component_change_summary"] = counts
+    if not counts.get("LensDistortion") or not (counts.get("Fog") or counts.get("LocalVolumetricFog")):
+        raise RuntimeError("Targeted lens/fog components were not found; refusing to produce an unchanged camera/fog patch.")
 
     # Aggressive mobile texture cap: reduce all oversized non-UI textures to 1024px max side.
     # Keep text/UI elements sharp; retain texture formats and regenerate full mip chains.
@@ -309,11 +363,22 @@ def main():
     verify = UnityPy.load(str(DATA))
     q_ok = False
     texture_ok = {}
+    component_validation = {}
     required_tex = {
         (x["asset_file"], int(x["path_id"])): tuple(int(v) for v in x["new_dimensions"])
         for x in report["texture_changes"]
     }
     for obj in verify.objects:
+        if obj.type.name == "MonoBehaviour":
+            try:
+                class_name, namespace, assembly = resolve_monobehaviour_class(obj)
+                if class_name in {"LensDistortion", "Fog", "LocalVolumetricFog"}:
+                    raw = obj.get_raw_data()
+                    component_validation[(str(getattr(obj.assets_file, "name", "")), int(obj.path_id))] = {
+                        "class": class_name, "enabled": (raw[12] == 1) if len(raw) > 12 else None
+                    }
+            except Exception:
+                pass
         if obj.type.name == "QualitySettings" and getattr(obj.assets_file, "name", "") == "globalgamemanagers":
             q = obj.parse_as_object()
             profs = list(q.m_QualitySettings or [])
@@ -339,6 +404,15 @@ def main():
 
     if not q_ok:
         raise RuntimeError("Low Mobile QualitySettings round-trip validation failed.")
+    for change in targeted_component_changes:
+        key = (change["asset_file"], change["path_id"])
+        state = component_validation.get(key)
+        if state is None or state.get("enabled") is not False:
+            raise RuntimeError(f"Component disable round-trip validation failed: {change['class']} path_id={change['path_id']}")
+    report["component_roundtrip_validation"] = {
+        "targeted_components": len(targeted_component_changes),
+        "all_disabled_verified": True,
+    }
     missing_textures = set(required_tex) - set(texture_ok)
     if missing_textures:
         raise RuntimeError(f"Texture round-trip validation failed: missing {len(missing_textures)} of {len(required_tex)} modified textures.")
