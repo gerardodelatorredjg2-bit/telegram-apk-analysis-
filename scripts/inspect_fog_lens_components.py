@@ -137,20 +137,14 @@ def main():
             ns = str(attr(sd, "m_Namespace", "") or "")
             if not any(t in (cls + " " + ns).lower() for t in ("fog", "volume", "lens", "distort", "weather", "postprocess", "postprocessing")):
                 continue
-            go = pptr_read(attr(data, "m_GameObject"))
-            go_name = ""
-            go_path = None
-            if go is not None:
-                try:
-                    gd = go.parse_as_object()
-                    go_name = str(attr(gd, "m_Name", "") or "")
-                    go_path = int(go.path_id)
-                except Exception:
-                    pass
+            go_ptr = attr(data, "m_GameObject")
+            go = pptr_read(go_ptr)
+            go_name = str(attr(go, "m_Name", "") or "") if go is not None else ""
+            go_path = int(attr(go_ptr, "path_id", 0) or 0) if go_ptr is not None else None
             relevant_mb.append({
                 "asset_file": str(attr(attr(obj, "assets_file"), "name", "")),
                 "path_id": int(obj.path_id),
-                "script": {"class": cls, "namespace": ns, "assembly": as_text(attr(sd, "m_AssemblyName")), "script_path_id": int(so.path_id)},
+                "script": {"class": cls, "namespace": ns, "assembly": as_text(attr(sd, "m_AssemblyName")), "script_path_id": int(attr(sp, "path_id", 0) or 0)},
                 "game_object": go_name,
                 "game_object_path_id": go_path,
                 "properties": typed_tree(obj)
