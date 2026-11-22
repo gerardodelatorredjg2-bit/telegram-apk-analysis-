@@ -67,7 +67,7 @@ jobs:
           java -jar tools/bin/bundletool.jar version
           tools/android/platform-tools/adb version
           tools/android/build-tools/35.0.0/aapt version
-          tools/android/build-tools/35.0.0/zipalign -h >/dev/null
+          test -x tools/android/build-tools/35.0.0/zipalign
           test -d tools/android/platforms/android-35
 
       - name: Bundle tools for download
