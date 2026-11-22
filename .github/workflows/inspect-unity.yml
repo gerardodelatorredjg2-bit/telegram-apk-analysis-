@@ -133,7 +133,79 @@ jobs:
           unzip -q /tmp/il2cppdumper.zip -d /tmp/il2cppdumper
           curl -fL --retry 3 https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
           bash /tmp/dotnet-install.sh --channel 6.0 --install-dir /tmp/dotnet
+          mkdir -p output/il2cpp-dump
+          python3 - <<'PY'
+          import json
+          p="/tmp/il2cppdumper/config.json"
+          d=json.load(open(p))
+          d["RequireAnyKey"]=False
+          json.dump(d,open(p,"w"),indent=2)
+          PY
           /tmp/dotnet/dotnet /tmp/il2cppdumper/Il2CppDumper.dll work/libil2cpp-armv7.so work/global-metadata.dat output/il2cpp-dump 2>&1 | tee output/il2cpp-dumper.log
+          find output/il2cpp-dump -maxdepth 2 -type f -printf '%p %s bytes\\n' | head -80
+          if test -f output/il2cpp-dump/dump.cs; then
+            grep -Ein "Microphone|Voice|Spectat|PerformanceMode|MobileAtmosphere|MobileControls|QualitySettings|Shadow|Fog|Camera" output/il2cpp-dump/dump.cs > output/code-hotspots.txt || true
+          fi
+
+      - name: Generate complete asset catalog
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import UnityPy, csv, json
+          from pathlib import Path
+          root=Path("work/apk/assets/bin/Data")
+          env=UnityPy.load(str(root))
+          rows=[]
+          settings={}
+          for obj in env.objects:
+              typ=obj.type.name
+              try:
+                  d=obj.read()
+              except Exception:
+                  continue
+              name=getattr(d,"m_Name",None) or getattr(d,"name",None) or ""
+              row={"type":typ,"name":str(name),"asset_file":str(getattr(obj.assets_file,"name","")),"path_id":int(obj.path_id)}
+              if typ=="Texture2D":
+                  row.update(width=getattr(d,"m_Width",None),height=getattr(d,"m_Height",None),format=str(getattr(d,"m_TextureFormat",None)),mip_count=getattr(d,"m_MipCount",None))
+                  image=getattr(d,"m_ImageData",b"")
+                  row["embedded_bytes"]=len(image) if image is not None else 0
+                  stream=getattr(d,"m_StreamData",None)
+                  if stream:
+                      row["stream_path"]=getattr(stream,"path","")
+                      row["stream_offset"]=getattr(stream,"offset",None)
+                      row["stream_size"]=getattr(stream,"size",None)
+              elif typ=="AudioClip":
+                  row.update(channels=getattr(d,"m_Channels",None),frequency=getattr(d,"m_Frequency",None),length=getattr(d,"m_Length",None),compression=str(getattr(d,"m_CompressionFormat",None)))
+                  res=getattr(d,"m_Resource",None)
+                  if res:
+                      row["resource_path"]=getattr(res,"m_Source","")
+                      row["resource_offset"]=getattr(res,"m_Offset",None)
+                      row["resource_size"]=getattr(res,"m_Size",None)
+              elif typ=="Mesh":
+                  vd=getattr(d,"m_VertexData",None)
+                  row.update(vertex_count=getattr(vd,"m_VertexCount",None),submesh_count=len(getattr(d,"m_SubMeshes",[]) or []))
+              rows.append(row)
+              if typ in ("QualitySettings","GraphicsSettings","RenderSettings","PlayerSettings"):
+                  try:
+                      settings[typ]=repr(vars(d))[:20000]
+                  except Exception:
+                      settings[typ]=str(d)[:20000]
+          if rows:
+              with open("output/assets_catalog.csv","w",newline="",encoding="utf-8") as f:
+                  w=csv.DictWriter(f,fieldnames=sorted({k for r in rows for k in r}))
+                  w.writeheader(); w.writerows(rows)
+          Path("output/unity_settings_dump.json").write_text(json.dumps(settings,indent=2,ensure_ascii=False))
+          textures=sorted((r for r in rows if r["type"]=="Texture2D"),key=lambda r:(r.get("width") or 0)*(r.get("height") or 0),reverse=True)
+          audios=sorted((r for r in rows if r["type"]=="AudioClip"),key=lambda r:r.get("length") or 0,reverse=True)
+          summary=["## Largest texture assets",""]
+          for r in textures[:40]:
+              summary.append(f"- {r['name']} — {r.get('width')}x{r.get('height')} — {r['asset_file']} — pathID {r['path_id']}")
+          summary += ["","## Longest audio clips",""]
+          for r in audios[:40]:
+              summary.append(f"- {r['name']} — {r.get('length')} s — {r.get('frequency')} Hz — {r['asset_file']} — pathID {r['path_id']}")
+          Path("output/resource_summary.md").write_text("\\n".join(summary))
+          print("catalog rows:",len(rows),"textures:",len(textures),"audio:",len(audios))
+          PY
 
       - name: Create analysis report
         if: always()
