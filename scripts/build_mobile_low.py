@@ -61,32 +61,34 @@ def patch_quality(obj, records):
     from attrs import evolve
     low = evolve(high)
     low.name = "Low (Mobile)"
-    low.shadows = 1                  # hard-only; avoids soft shadow filtering
-    low.shadowDistance = 15.0
+    low.shadows = 0                  # disabled on the Low Mobile profile
+    low.shadowDistance = 0.0
     low.shadowResolution = 0
     low.shadowCascades = 0
-    low.pixelLightCount = 1
+    low.pixelLightCount = 0
     low.antiAliasing = 0
-    low.anisotropicTextures = 1
-    low.lodBias = 0.65
-    low.maximumLODLevel = 1
+    low.anisotropicTextures = 0
+    low.lodBias = 0.45
+    low.maximumLODLevel = 2
     low.globalTextureMipmapLimit = 1
     low.streamingMipmapsActive = True
-    low.streamingMipmapsMemoryBudget = 192.0
-    low.streamingMipmapsMaxFileIORequests = 256
-    low.streamingMipmapsRenderersPerFrame = 128
+    low.streamingMipmapsMemoryBudget = 128.0
+    low.streamingMipmapsMaxFileIORequests = 128
+    low.streamingMipmapsRenderersPerFrame = 64
     low.realtimeReflectionProbes = False
-    low.particleRaycastBudget = 64
-    low.terrainBasemapDistance = 400.0
-    low.terrainBillboardStart = 25.0
-    low.terrainDetailDensityScale = 0.35
-    low.terrainDetailDistance = 25.0
-    low.terrainMaxTrees = 25
-    low.terrainPixelError = 2.0
-    low.terrainTreeDistance = 600.0
+    low.particleRaycastBudget = 16
+    low.terrainBasemapDistance = 250.0
+    low.terrainBillboardStart = 15.0
+    low.terrainDetailDensityScale = 0.15
+    low.terrainDetailDistance = 10.0
+    low.terrainMaxTrees = 15
+    low.terrainPixelError = 3.0
+    low.terrainTreeDistance = 300.0
     low.asyncUploadBufferSize = 4
     low.asyncUploadTimeSlice = 1
     low.softVegetation = False
+    if hasattr(low, "skinWeights"):
+        low.skinWeights = 2
     settings.m_QualitySettings = [low, high]
     settings.m_CurrentQuality = 0
     settings.m_DefaultMobileQuality = 0
@@ -136,9 +138,11 @@ def main():
         "player_settings": None,
         "saved_asset_files": {},
         "notes": [
-            "Only four-kilopixel textures are downsampled to two-kilopixel textures.",
+            "Mobile Low targets a maximum texture dimension of 1024px, except UI/text assets.",
             "Both original and low mobile quality profiles are retained; low mobile is selected by default.",
-            "Audio clips, mesh geometry, scenes, colliders, network code, and voice resources are not removed or rewritten.",
+            "Texture assets are resized in their existing Unity texture format; normal maps are renormalized after resampling.",
+            "Scenes, colliders, meshes, audio, network code, voice resources, and both Android ABIs are preserved.",
+            "Runtime frame rate and visual effects must still be checked on a physical Android device.",
         ],
     }
 
@@ -156,8 +160,13 @@ def main():
     report["player_settings"] = patch_player_settings(player_obj)
     changed_files[id(quality_obj.assets_file)] = quality_obj.assets_file
 
-    # Lower only very large 4096x4096 textures. Leave existing 2K/1K assets untouched.
-    seen = 0
+    # Aggressive mobile texture cap: reduce all oversized non-UI textures to 1024px max side.
+    # Keep text/UI elements sharp; retain texture formats and regenerate full mip chains.
+    max_dimension = 1024
+    ui_name_tokens = (
+        "manual", "splash", "logo", "font", "glyph", "icon", "cursor",
+        "crosshair", "reticle", "subtitle", "button", "hud", "ui_",
+    )
     for obj in env.objects:
         if obj.type.name != "Texture2D":
             continue
@@ -165,49 +174,90 @@ def main():
             tex = obj.parse_as_object()
             width = int(getattr(tex, "m_Width", 0) or 0)
             height = int(getattr(tex, "m_Height", 0) or 0)
-            if width != 4096 or height != 4096:
+            if width <= 0 or height <= 0 or max(width, height) <= max_dimension:
                 continue
+
             name = str(getattr(tex, "m_Name", "") or "")
+            lower_name = name.lower()
+            if any(token in lower_name for token in ui_name_tokens):
+                report["texture_skips"].append({
+                    "name": name,
+                    "reason": "preserved UI/text asset",
+                    "old_dimensions": [width, height],
+                })
+                continue
+
             fmt = int(getattr(tex, "m_TextureFormat", 0) or 0)
-            old_data_size = 0
             try:
                 old_data_size = len(tex.get_image_data())
             except Exception:
-                pass
+                old_data_size = 0
+
             img = tex.image
             if img is None:
                 report["texture_skips"].append({"name": name, "reason": "UnityPy did not decode the texture"})
                 continue
-            target = (2048, 2048)
-            if "normal" in name.lower() or "nrm" in name.lower():
+
+            scale = max_dimension / float(max(width, height))
+            target_w = max(4, int(round((width * scale) / 4.0)) * 4)
+            target_h = max(4, int(round((height * scale) / 4.0)) * 4)
+            target = (target_w, target_h)
+
+            if "normal" in lower_name or "nrm" in lower_name:
                 resized = resize_normal_map(img, target)
             else:
                 resized = img.resize(target, Image.Resampling.LANCZOS)
+
             mip_count = int(math.log2(min(target))) + 1
             tex.set_image(resized, target_format=fmt, mipmap_count=mip_count)
-            obj.patch(tex)
-            changed_files[id(obj.assets_file)] = obj.assets_file
-            seen += 1
-            new_data_size = 0
             try:
                 new_data_size = len(tex.get_image_data())
             except Exception:
-                pass
+                new_data_size = 0
+
+            # If UnityPy cannot report sizes, retain the resized image only when
+            # dimensions changed successfully. If size is known, demand a saving.
+            if old_data_size > 0 and new_data_size > 0 and new_data_size >= old_data_size:
+                report["texture_skips"].append({
+                    "name": name,
+                    "reason": "resized encoding was not smaller",
+                    "old_dimensions": [width, height],
+                    "new_dimensions": list(target),
+                    "old_encoded_bytes": old_data_size,
+                    "new_encoded_bytes": new_data_size,
+                })
+                continue
+
+            obj.patch(tex)
+            changed_files[id(obj.assets_file)] = obj.assets_file
             report["texture_changes"].append({
                 "name": name,
                 "asset_file": str(getattr(obj.assets_file, "name", "")),
                 "path_id": int(obj.path_id),
                 "old_dimensions": [width, height],
-                "new_dimensions": [2048, 2048],
+                "new_dimensions": list(target),
                 "format": fmt,
                 "old_encoded_bytes": old_data_size,
                 "new_encoded_bytes": new_data_size,
+                "normal_map_renormalized": ("normal" in lower_name or "nrm" in lower_name),
             })
         except Exception as exc:
             report["texture_skips"].append({"path_id": int(obj.path_id), "reason": str(exc)[:500]})
 
     if not report["texture_changes"]:
-        raise RuntimeError("No 4096x4096 textures could be safely decoded and resized; refusing to create an unchanged build.")
+        raise RuntimeError("No oversized textures could be safely resized; refusing to create an unchanged build.")
+
+    report["texture_summary"] = {
+        "max_dimension": max_dimension,
+        "changed_count": len(report["texture_changes"]),
+        "skipped_count": len(report["texture_skips"]),
+        "old_encoded_bytes": sum(int(x.get("old_encoded_bytes", 0) or 0) for x in report["texture_changes"]),
+        "new_encoded_bytes": sum(int(x.get("new_encoded_bytes", 0) or 0) for x in report["texture_changes"]),
+        "encoded_bytes_saved_estimate": sum(
+            max(0, int(x.get("old_encoded_bytes", 0) or 0) - int(x.get("new_encoded_bytes", 0) or 0))
+            for x in report["texture_changes"]
+        ),
+    }
 
     # Save each modified Unity serialized file once.
     outputs = {}
@@ -255,10 +305,14 @@ def main():
             shutil.copy2(path, dest)
             replacements[f"assets/bin/Data/{name}"] = dest
 
-    # Round-trip validate the modified assets before the APK is repacked.
+    # Round-trip validate all modified dimensions and the Low Mobile profile.
     verify = UnityPy.load(str(DATA))
     q_ok = False
-    texture_ok = set()
+    texture_ok = {}
+    required_tex = {
+        (x["asset_file"], int(x["path_id"])): tuple(int(v) for v in x["new_dimensions"])
+        for x in report["texture_changes"]
+    }
     for obj in verify.objects:
         if obj.type.name == "QualitySettings" and getattr(obj.assets_file, "name", "") == "globalgamemanagers":
             q = obj.parse_as_object()
@@ -267,20 +321,25 @@ def main():
                 len(profs) >= 2
                 and getattr(profs[0], "name", "") == "Low (Mobile)"
                 and int(q.m_CurrentQuality) == 0
-                and float(profs[0].shadowDistance) == 15.0
+                and float(profs[0].shadowDistance) == 0.0
+                and int(profs[0].shadows) == 0
+                and int(profs[0].pixelLightCount) == 0
             )
         elif obj.type.name == "Texture2D":
+            key = (str(getattr(obj.assets_file, "name", "")), int(obj.path_id))
+            if key not in required_tex:
+                continue
             try:
                 t = obj.parse_as_object()
-                if int(t.m_Width) == 2048 and int(t.m_Height) == 2048:
-                    if int(obj.path_id) in {int(x["path_id"]) for x in report["texture_changes"]}:
-                        texture_ok.add((str(getattr(obj.assets_file, "name", "")), int(obj.path_id)))
+                dims = (int(t.m_Width), int(t.m_Height))
+                if dims == required_tex[key]:
+                    texture_ok[key] = dims
             except Exception:
                 pass
-    required_tex = {(x["asset_file"], int(x["path_id"])) for x in report["texture_changes"]}
+
     if not q_ok:
-        raise RuntimeError("QualitySettings round-trip validation failed.")
-    missing_textures = required_tex - texture_ok
+        raise RuntimeError("Low Mobile QualitySettings round-trip validation failed.")
+    missing_textures = set(required_tex) - set(texture_ok)
     if missing_textures:
         raise RuntimeError(f"Texture round-trip validation failed: missing {len(missing_textures)} of {len(required_tex)} modified textures.")
     report["roundtrip_validation"] = {
@@ -288,6 +347,7 @@ def main():
         "modified_textures_required": len(required_tex),
         "matching_textures_found": len(texture_ok),
         "all_modified_textures_present": True,
+        "max_texture_dimension_after_patch": max(max(v) for v in texture_ok.values()),
     }
 
     # Rewrite APK while preserving every original entry except the serialized files changed above.
