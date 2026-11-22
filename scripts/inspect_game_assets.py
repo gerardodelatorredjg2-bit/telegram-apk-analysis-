@@ -56,6 +56,37 @@ def ptr_id(value):
     return int(getattr(value, "m_PathID", 0) or 0)
 
 env = UnityPy.load(str(DATA))
+
+# Unity IL2CPP builds omit most custom MonoBehaviour typetrees from serialized
+# assets. Generate them from the exact arm64 libil2cpp + global-metadata pair
+# before inspecting any scene component; otherwise only the generic header is
+# visible and settings for fog/cameras/volumes cannot be identified safely.
+typetree_status = {"enabled": False}
+il2cpp_path = Path("work/apk/lib/arm64-v8a/libil2cpp.so")
+metadata_path = DATA / "Managed" / "Metadata" / "global-metadata.dat"
+try:
+    from UnityPy.helpers.TypeTreeGenerator import TypeTreeGenerator
+    unity_version = next(
+        (str(getattr(o.assets_file, "unity_version", "")) for o in env.objects
+         if getattr(o.assets_file, "unity_version", "")),
+        ""
+    )
+    if not unity_version:
+        raise RuntimeError("Unity version missing from serialized assets")
+    if not il2cpp_path.is_file() or not metadata_path.is_file():
+        raise FileNotFoundError("IL2CPP binary or global-metadata.dat is missing")
+    generator = TypeTreeGenerator(unity_version)
+    generator.load_il2cpp(il2cpp_path.read_bytes(), metadata_path.read_bytes())
+    env.typetree_generator = generator
+    typetree_status = {
+        "enabled": True,
+        "unity_version": unity_version,
+        "il2cpp_bytes": il2cpp_path.stat().st_size,
+        "metadata_bytes": metadata_path.stat().st_size,
+    }
+except Exception as exc:
+    typetree_status = {"enabled": False, "error": str(exc)[:1000]}
+
 type_counts = Counter()
 script_map = {}
 gameobject_map = {}
@@ -127,8 +158,28 @@ for obj in objects:
     except Exception as exc:
         exceptions.append({"kind": obj.type.name, "path_id": int(obj.path_id), "error": str(exc)[:250]})
 
+# Capture built-in render settings and camera defaults as well as custom components.
+render_settings = []
+camera_settings = []
+for obj in objects:
+    try:
+        if obj.type.name == "RenderSettings":
+            render_settings.append({
+                "asset_file": str(getattr(obj.assets_file, "name", "")),
+                "path_id": int(obj.path_id),
+                "fields": plain(parse_dict(obj)),
+            })
+        elif obj.type.name == "Camera":
+            camera_settings.append({
+                "asset_file": str(getattr(obj.assets_file, "name", "")),
+                "path_id": int(obj.path_id),
+                "fields": plain(parse_dict(obj)),
+            })
+    except Exception as exc:
+        exceptions.append({"kind": obj.type.name, "path_id": int(obj.path_id), "error": str(exc)[:250]})
+
 # Map MonoBehaviours to script names and their owning GameObjects.
-terms = re.compile(r"fog|lens|distort|volume|post.?process|camera|spectat|death|respawn|audio|micro|voice|player|network|input|quality", re.I)
+terms = re.compile(r"fog|lens|distort|volume|post.?process|camera|spectat|death|respawn|audio|micro|voice|player|network|input|quality|ship|monitor|hdrp|sky|global|profile|spooky|fixfog|chromatic|vignette", re.I)
 for obj in objects:
     if obj.type.name != "MonoBehaviour":
         continue
@@ -161,18 +212,23 @@ report = {
     "unitypy_version": getattr(UnityPy, "__version__", "unknown"),
     "asset_type_counts": dict(sorted(type_counts.items())),
     "mono_script_count": len(script_map),
+    "named_script_count": sum(bool(x.get("class")) for x in script_map.values()),
+    "typetree_generator": typetree_status,
     "gameobject_count": len(gameobject_map),
+    "render_settings": render_settings,
+    "camera_settings": camera_settings,
     "relevant_monobehaviours": records,
     "audio_clips": sorted(audio, key=lambda x: x["length_seconds"], reverse=True),
     "mesh_summary": {
         "count": len(meshes),
         "total_vertices": sum(x["vertex_count"] for x in meshes),
         "total_indices": sum(x["index_count"] for x in meshes),
-        "largest_meshes": sorted(meshes, key=lambda x: x["vertex_count"], reverse=True)[:80],
+        "largest_meshes": sorted(meshes, key=lambda x: x["vertex_count"], reverse=True)[:120],
     },
     "parse_exceptions": exceptions[:200],
     "notes": [
         "Read-only inventory; no audio, mesh, scene, volume, camera, or gameplay resource was changed.",
+        "IL2CPP typetree generation is attempted using the arm64 binary and the matching global-metadata.dat; its status is recorded above.",
         "Audio compression_format values are Unity serialized enum values, not human-readable labels.",
         "Mesh data and animation/skeleton/collider dependencies must be inspected before geometry reduction.",
     ],
@@ -182,6 +238,8 @@ path.write_text(json.dumps(report, indent=2, ensure_ascii=False))
 print(json.dumps({
     "asset_type_counts": report["asset_type_counts"],
     "mono_script_count": report["mono_script_count"],
+    "named_script_count": report["named_script_count"],
+    "typetree_generator": report["typetree_generator"],
     "relevant_monobehaviour_count": len(records),
     "audio_clip_count": len(audio),
     "mesh_count": len(meshes),
