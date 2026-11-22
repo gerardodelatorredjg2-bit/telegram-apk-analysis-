@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/inspect-unity-assets.yml"
       - "scripts/inspect_unity_assets.py"
+      - "scripts/inspect_fog_lens_components.py"
 
 permissions:
   actions: read
@@ -69,11 +70,16 @@ jobs:
       - name: Inventory meshes, audio, textures, shaders, cameras and fog
         run: python scripts/inspect_unity_assets.py
 
+      - name: Inspect fog, volume and lens distortion component references
+        run: python scripts/inspect_fog_lens_components.py
+
       - name: Upload Unity asset inventory
         uses: actions/upload-artifact@v4
         with:
           name: unity-asset-inventory
-          path: output/unity-asset-inventory.json
+          path: |
+            output/unity-asset-inventory.json
+            output/unity-volume-fog-lens-details.json
           compression-level: 6
           retention-days: 30
 
@@ -83,9 +89,10 @@ jobs:
           set -euo pipefail
           mkdir -p reports
           cp output/unity-asset-inventory.json reports/unity-asset-inventory.json
+          cp output/unity-volume-fog-lens-details.json reports/unity-volume-fog-lens-details.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/unity-asset-inventory.json
+          git add reports/unity-asset-inventory.json reports/unity-volume-fog-lens-details.json
           if git diff --cached --quiet; then
             echo "Inventory report unchanged; no commit needed."
             exit 0
