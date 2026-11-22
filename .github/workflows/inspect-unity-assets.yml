@@ -1,0 +1,78 @@
+name: Inspect Unity assets for deeper mobile optimization
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/inspect-unity-assets.yml"
+      - "scripts/inspect_unity_assets.py"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout analysis script
+        uses: actions/checkout@v4
+
+      - name: Download preserved original APK
+        uses: actions/download-artifact@v4
+        with:
+          name: original-apk
+          repository: ${{ github.repository }}
+          run-id: 45057515185
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+
+      - name: Extract and reassemble Unity data files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s input/original.apk
+          mkdir -p work/apk/assets/bin/Data output
+          unzip -q input/original.apk -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path("work/apk/assets/bin/Data")
+          groups = {}
+          for p in root.iterdir():
+              m = re.fullmatch(r"(.+)\.split(\d+)", p.name)
+              if m:
+                  groups.setdefault(m.group(1), []).append((int(m.group(2)), p))
+          for name, chunks in sorted(groups.items()):
+              chunks.sort()
+              ids = [i for i, _ in chunks]
+              if ids != list(range(ids[-1] + 1)):
+                  raise SystemExit(f"Missing chunk in {name}: {ids}")
+              target = root / name
+              with target.open("wb") as dst:
+                  for _, chunk in chunks:
+                      with chunk.open("rb") as src:
+                          while block := src.read(8 * 1024 * 1024):
+                              dst.write(block)
+              for _, chunk in chunks:
+                  chunk.unlink()
+              print(f"Reassembled {name}: {len(chunks)} chunks, {target.stat().st_size} bytes")
+          PY
+
+      - name: Install Unity asset inspection tools
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --disable-pip-version-check "UnityPy==1.25.4" numpy pillow
+
+      - name: Inventory meshes, audio, textures, shaders, cameras and fog
+        run: python scripts/inspect_unity_assets.py
+
+      - name: Upload Unity asset inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-asset-inventory
+          path: output/unity-asset-inventory.json
+          compression-level: 6
+          retention-days: 30
