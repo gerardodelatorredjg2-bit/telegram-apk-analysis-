@@ -171,6 +171,7 @@ jobs:
           name: lethal-offline-mobile-low-report
           path: |
             output/optimization-report.json
+            output/asset-diagnostics.json
             output/apk-badging.txt
             output/LEEME.txt
           retention-days: 30
