@@ -20,15 +20,13 @@ jobs:
           curl -fL --retry 3 --retry-delay 2 "$URL" -o original.apk
           file original.apk
           test -s original.apk
-          SIZE=$(stat -c%s original.apk)
-          echo "Downloaded bytes: $SIZE"
-          if [ "$SIZE" -gt 95000000 ]; then
-            echo "APK exceeds 95 MB; artifact only, do not commit it to Git."
-            exit 1
-          fi
-      - name: Save APK as Actions artifact
+          stat -c 'Downloaded APK size: %s bytes' original.apk
+          sha256sum original.apk > original.apk.sha256
+      - name: Save APK and checksum as Actions artifact
         uses: actions/upload-artifact@v4
         with:
           name: original-apk
-          path: original.apk
+          path: |
+            original.apk
+            original.apk.sha256
           retention-days: 30
