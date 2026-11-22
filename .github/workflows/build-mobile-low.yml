@@ -84,7 +84,7 @@ jobs:
       - name: Patch low mobile quality and 4K textures
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check "UnityPy==1.25.4" numpy
+          python -m pip install --disable-pip-version-check "UnityPy==1.25.4" "TypeTreeGeneratorAPI==0.0.10" numpy
           python scripts/inspect_game_assets.py
           python scripts/build_mobile_low.py
 
