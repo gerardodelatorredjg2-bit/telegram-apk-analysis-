@@ -1,4 +1,4 @@
-name: Split Lethal Offline release artifacts
+name: Package APK only (7z)
 
 on:
   workflow_dispatch:
@@ -11,11 +11,16 @@ permissions:
   contents: read
 
 jobs:
-  split:
+  package:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
-      - name: Download completed release artifact
+      - name: Install 7z
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full
+
+      - name: Download verified build from run 45061020860
         uses: actions/download-artifact@v4
         with:
           name: lethal-offline-mobile-low
@@ -24,40 +29,36 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: downloaded
 
-      - name: Verify and split release files
+      - name: Verify APK and create archive containing only the APK
+        shell: bash
         run: |
           set -euo pipefail
-          test -s downloaded/LethalOffline-MobileLow.7z
-          test -s downloaded/LethalOffline-MobileLow.apk
-          7z t downloaded/LethalOffline-MobileLow.7z
-          (cd downloaded && sha256sum -c <(sed 's#output/##g' LethalOffline-MobileLow.apk.sha256))
-          mkdir -p release/apk release/archive release/report
-          cp downloaded/LethalOffline-MobileLow.apk release/apk/
-          sed 's#output/##g' downloaded/LethalOffline-MobileLow.apk.sha256 > release/apk/LethalOffline-MobileLow.apk.sha256
-          cp downloaded/LethalOffline-MobileLow.7z release/archive/
-          cp downloaded/optimization-report.json downloaded/apk-badging.txt downloaded/LEEME.txt release/report/
-          du -h release/apk/* release/archive/* release/report/*
+          APK="LethalOffline-MobileLow.apk"
+          test -s "downloaded/$APK"
+          test -s "downloaded/LethalOffline-MobileLow.apk.sha256"
 
-      - name: Upload APK only
+          EXPECTED="$(awk '{print $1}' downloaded/LethalOffline-MobileLow.apk.sha256)"
+          test -n "$EXPECTED"
+          printf '%s  %s\n' "$EXPECTED" "downloaded/$APK" | sha256sum -c -
+
+          mkdir -p release extracted
+          (
+            cd downloaded
+            7z a -t7z -m0=lzma2 -mx=5 -mmt=on "../release/LethalOffline-MobileLow-APK.7z" "$APK"
+          )
+          7z t release/LethalOffline-MobileLow-APK.7z
+          7z x -y -orextracted release/LethalOffline-MobileLow-APK.7z
+          cmp "downloaded/$APK" "extracted/$APK"
+          test "$(find extracted -type f | wc -l)" -eq 1
+          sha256sum "extracted/$APK" | tee release/LethalOffline-MobileLow-APK.sha256
+          stat -c 'APK bytes: %s' "downloaded/$APK"
+          stat -c '7z bytes: %s' "release/LethalOffline-MobileLow-APK.7z"
+          7z l -ba release/LethalOffline-MobileLow-APK.7z
+
+      - name: Upload compressed APK only
         uses: actions/upload-artifact@v4
         with:
-          name: lethal-offline-mobile-low-apk
-          path: release/apk/*
+          name: lethal-offline-mobile-low-apk-only-7z
+          path: release/LethalOffline-MobileLow-APK.7z
           compression-level: 0
-          retention-days: 30
-
-      - name: Upload requested 7z only
-        uses: actions/upload-artifact@v4
-        with:
-          name: lethal-offline-mobile-low-7z
-          path: release/archive/*
-          compression-level: 0
-          retention-days: 30
-
-      - name: Upload optimization report
-        uses: actions/upload-artifact@v4
-        with:
-          name: lethal-offline-mobile-low-report
-          path: release/report/*
-          compression-level: 6
           retention-days: 30
