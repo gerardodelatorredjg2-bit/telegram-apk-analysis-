@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/build-mobile-low.yml"
       - "scripts/build_mobile_low.py"
+      - "scripts/inspect_game_assets.py"
 
 permissions:
   actions: read
@@ -84,6 +85,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check "UnityPy==1.25.4" numpy
+          python scripts/inspect_game_assets.py
           python scripts/build_mobile_low.py
 
       - name: Align, sign, and verify APK
@@ -121,9 +123,11 @@ jobs:
           
           Incluye una APK Android con un perfil gráfico bajo por defecto.
           Conserva el perfil High original como segundo nivel de calidad.
-          Las texturas de 4096x4096 que se pudieron decodificar se redujeron a 2048x2048.
+          Las texturas no-UI mayores se redujeron a un máximo de 1024 px por lado.
           Se conservan las dos arquitecturas: armeabi-v7a y arm64-v8a.
           No se eliminaron mapas, escenas, audio, mallas, monstruos ni recursos de red.
+          asset-diagnostics.json contiene un inventario de solo lectura de efectos, audio y mallas.
+          La inspección no implica que los bugs de cámara, niebla o gameplay ya estén corregidos.
           
           IMPORTANTE:
           Esta APK está firmada con una clave nueva de esta compilación.
@@ -137,6 +141,7 @@ jobs:
             output/LethalOffline-MobileLow.apk \
             output/LethalOffline-MobileLow.apk.sha256 \
             output/optimization-report.json \
+            output/asset-diagnostics.json \
             output/apk-badging.txt \
             output/LEEME.txt
           7z t output/LethalOffline-MobileLow.7z
