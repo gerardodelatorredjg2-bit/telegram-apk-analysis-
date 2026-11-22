@@ -55,8 +55,11 @@ def patch_quality(obj, records):
         raise RuntimeError("QualitySettings has no quality profile; refusing to invent one.")
 
     # Keep a copy of the original profile so High remains available as profile 1.
-    high = copy.deepcopy(current[0])
-    low = copy.deepcopy(current[0])
+    high = current[0]
+    # Construct a shallow copy from the dataclass fields; deep-copying Unity PPtrs
+    # also tries to copy their binary readers and fails on EndianBinaryReader.
+    from dataclasses import fields
+    low = type(high)(**{field.name: getattr(high, field.name) for field in fields(high)})
     low.name = "Low (Mobile)"
     low.shadows = 1                  # hard-only; avoids soft shadow filtering
     low.shadowDistance = 15.0
