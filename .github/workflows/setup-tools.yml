@@ -13,11 +13,13 @@ jobs:
   tools:
     runs-on: ubuntu-latest
     steps:
-      - name: Install Java and utilities
+      - name: Install Java, Maven and utilities
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-17-jdk unzip zip curl wget file python3
+          sudo apt-get install -y openjdk-17-jdk maven unzip zip curl wget file python3
           java -version
+          mvn -version
+
       - name: Download pinned APK analysis tools
         run: |
           set -euo pipefail
@@ -25,12 +27,25 @@ jobs:
           curl -fL --retry 3 https://github.com/skylot/jadx/releases/download/v1.5.1/jadx-1.5.1.zip -o /tmp/jadx.zip
           unzip -q /tmp/jadx.zip -d tools/jadx
           curl -fL --retry 3 https://github.com/iBotPeaches/Apktool/releases/download/v2.10.0/apktool_2.10.0.jar -o tools/bin/apktool.jar
-          curl -fL --retry 3 https://repo.maven.apache.org/maven2/org/smali/baksmali/2.5.2/baksmali-2.5.2.jar -o tools/bin/baksmali.jar
           curl -fL --retry 3 https://github.com/pxb1988/dex2jar/releases/download/v2.4/dex-tools-v2.4.zip -o /tmp/dex2jar.zip
           unzip -q /tmp/dex2jar.zip -d tools/dex2jar
           curl -fL --retry 3 https://github.com/google/bundletool/releases/download/1.17.2/bundletool-all-1.17.2.jar -o tools/bin/bundletool.jar
-          echo "Tools downloaded:"
-          find tools -type f -printf '%p (%s bytes)\n'
+
+      - name: Install Baksmali with its runtime dependencies
+        run: |
+          set -euo pipefail
+          cat > /tmp/baksmali-pom.xml <<'POM'
+          <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+            <groupId>local.tools</groupId><artifactId>baksmali-runtime</artifactId><version>1.0</version>
+            <dependencies>
+              <dependency><groupId>org.smali</groupId><artifactId>baksmali</artifactId><version>2.5.2</version></dependency>
+            </dependencies>
+          </project>
+          POM
+          mvn -B -q -f /tmp/baksmali-pom.xml dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory="$GITHUB_WORKSPACE/tools/bin/baksmali-libs"
+          test -s tools/bin/baksmali-libs/baksmali-2.5.2.jar
+
       - name: Prepare Android SDK command-line tools and platform tools
         run: |
           set -euo pipefail
@@ -42,20 +57,25 @@ jobs:
           unzip -q /tmp/platform-tools.zip -d tools/android
           yes | tools/android/cmdline-tools/latest/bin/sdkmanager --sdk_root=tools/android --licenses || true
           tools/android/cmdline-tools/latest/bin/sdkmanager --sdk_root=tools/android "platforms;android-35" "build-tools;35.0.0"
+
       - name: Verify tool packages
         run: |
-          set -e
+          set -euo pipefail
           java -jar tools/bin/apktool.jar --version
           tools/jadx/bin/jadx --version
-          java -cp tools/bin/baksmali.jar org.jf.baksmali.Main --version
+          java -cp "tools/bin/baksmali-libs/*" org.jf.baksmali.Main --version
           java -jar tools/bin/bundletool.jar version
           tools/android/platform-tools/adb version
-          test -x tools/android/build-tools/35.0.0/aapt
+          tools/android/build-tools/35.0.0/aapt version
+          tools/android/build-tools/35.0.0/zipalign -h >/dev/null
           test -d tools/android/platforms/android-35
+
       - name: Bundle tools for download
         run: |
           zip -qr apk-re-tools.zip tools
           sha256sum apk-re-tools.zip > apk-re-tools.zip.sha256
+          ls -lh apk-re-tools.zip apk-re-tools.zip.sha256
+
       - name: Upload toolchain artifact
         uses: actions/upload-artifact@v4
         with:
