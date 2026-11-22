@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import struct
 from pathlib import Path
 import UnityPy
 
@@ -67,6 +68,36 @@ def main():
         except Exception:
             pass
 
+    mono_headers = {}
+    for obj in objects:
+        if attr(attr(obj, "type"), "name") != "MonoBehaviour":
+            continue
+        try:
+            raw = obj.get_raw_data()
+        except Exception:
+            raw = b""
+        if not raw or len(raw) < 28:
+            continue
+        try:
+            go_path = struct.unpack_from("<q", raw, 4)[0]
+            enabled = bool(raw[12])
+            script_file_id = struct.unpack_from("<i", raw, 16)[0]
+            script_path_id = struct.unpack_from("<q", raw, 20)[0]
+        except Exception:
+            continue
+        meta = scripts.get(script_path_id)
+        mono_headers[(str(attr(attr(obj, "assets_file"), "name", "")), int(obj.path_id))] = {
+            "component_path_id": int(obj.path_id),
+            "game_object_path_id": int(go_path),
+            "enabled": enabled,
+            "script_file_id": script_file_id,
+            "script_path_id": script_path_id,
+            "script": meta,
+            "raw_prefix_hex": bytes(raw[:48]).hex(),
+            "raw_size": len(raw),
+            "asset_file": str(attr(attr(obj, "assets_file"), "name", ""))
+        }
+
     targeted = []
     relevant_mb = []
     volume_candidates = []
@@ -112,7 +143,8 @@ def main():
                     "component_path_id": comp_path_id,
                     "type": comp_kind,
                     "name": comp_name,
-                    "script": script,
+                    "script": script or mono_headers.get((go_asset, comp_path_id), {}).get("script"),
+                    "enabled": mono_headers.get((go_asset, comp_path_id), {}).get("enabled"),
                     "properties": props
                 })
             targeted.append({
@@ -125,6 +157,18 @@ def main():
             })
 
         if kind == "MonoBehaviour":
+            header = mono_headers.get((str(attr(attr(obj, "assets_file"), "name", "")), int(obj.path_id)))
+            if header and header.get("script"):
+                meta = header["script"]
+                cls0 = str(meta.get("class") or "")
+                ns0 = str(meta.get("namespace") or "")
+                if any(t in (cls0 + " " + ns0).lower() for t in ("fog", "volume", "lens", "distort", "weather", "postprocess", "postprocessing")):
+                    relevant_mb.append({
+                        **header,
+                        "script": meta,
+                        "game_object": "",
+                        "properties": {}
+                    })
             try:
                 data = obj.parse_as_object()
             except Exception:
@@ -154,6 +198,8 @@ def main():
         "mono_scripts": list(scripts.values()),
         "target_gameobjects": targeted,
         "relevant_monobehaviours": relevant_mb,
+        "raw_monobehaviour_count": len(mono_headers),
+        "raw_mono_class_count": len([x for x in mono_headers.values() if x.get("script")]),
         "notes": "Inspection only; no gameplay assets modified."
     }
     OUT.mkdir(parents=True, exist_ok=True)
@@ -161,7 +207,9 @@ def main():
     print(json.dumps({
         "target_gameobjects": targeted[:80],
         "relevant_monobehaviours": relevant_mb[:120],
-        "script_classes_matching": [x for x in scripts.values() if any(t in ((x.get("class") or "") + " " + (x.get("namespace") or "")).lower() for t in ("fog", "volume", "lens", "distort", "weather", "postprocess"))]
+        "script_classes_matching": [x for x in scripts.values() if any(t in ((x.get("class") or "") + " " + (x.get("namespace") or "")).lower() for t in ("fog", "volume", "lens", "distort", "weather", "postprocess"))],
+        "raw_monobehaviour_count": len(mono_headers),
+        "raw_mono_class_count": len([x for x in mono_headers.values() if x.get("script")])
     }, indent=2, ensure_ascii=False)[:45000])
 
 if __name__ == "__main__":
