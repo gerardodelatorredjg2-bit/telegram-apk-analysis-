@@ -55,37 +55,37 @@ public class DecompileSelectedMethods extends GhidraScript {
             return signature.matches(".*(Find|GetOrAdd|IsVisible).*");
         }
         if (type.equals("MobileGameViewFit")) {
-            return signature.matches(".*(CreateForAndroid|Awake|Update|ApplyForDisplay|TryGetDisplayedAspect|ApplyAspectCamera|RestoreAspectCamera|RestoreView|OnDisable|OnDestroy).*");
+            return signature.matches(".*(CreateForAndroid|Awake\\(\\)|Update\\(\\)|ApplyForDisplay|TryGetDisplayedAspect|ApplyAspectCamera|RestoreAspectCamera|RestoreView|OnDisable|OnDestroy).*");
         }
         if (type.equals("MobileTouchControls")) {
-            return signature.matches(".*(CreateForAndroid|Awake|BuildPersistentInputAnchors|BuildCanvas|BuildGameplayControls|BuildTerminalControls|MakeImage|MakeButton|MakeActionButton|MakeTerminalButton|LayoutActionButtons|UpdateActionButtons|UpdateExtraButtons|UpdateTerminalButtons|UpdateSafeArea|UpdateCanvasScale|UpdateInputMode|UpdateChatKeyboard|UpdateKeyboard|UpdateTerminalReference|OnSceneLoaded|StartTerminalKeyboard|OnDisable|OnDestroy|Update).*");
+            return signature.matches(".*(CreateForAndroid|Awake\\(\\)|BuildPersistentInputAnchors|BuildCanvas|BuildGameplayControls|BuildTerminalControls|MakeImage|MakeButton|MakeActionButton|MakeTerminalButton|LayoutActionButtons|UpdateActionButtons|UpdateExtraButtons|UpdateTerminalButtons|UpdateSafeArea|UpdateCanvasScale|UpdateInputMode|UpdateChatKeyboard|UpdateKeyboard|UpdateTerminalReference|OnSceneLoaded|StartTerminalKeyboard|OnDisable|OnDestroy|Update\\(\\)).*");
         }
         if (type.equals("MobileTouchLook")) {
-            return signature.matches(".*(Update|LateUpdate|SendLookDelta|OnDisable|OnPointerDown|OnDrag|OnPointerUp|InitializePointer|CommitLook).*");
+            return signature.matches(".*(Update\\(\\)|LateUpdate|SendLookDelta|OnDisable|OnPointerDown|OnDrag|OnPointerUp|InitializePointer|CommitLook).*");
         }
         if (type.equals("MobileTouchStick")) {
-            return signature.matches(".*(Start|OnPointerDown|OnDrag|OnPointerUp|UpdateSprint|CancelInput|OnDisable).*");
+            return signature.matches(".*(Start\\(\\)|OnPointerDown|OnDrag|OnPointerUp|UpdateSprint|CancelInput|OnDisable).*");
         }
         if (type.equals("MobileTouchActionButton")) {
-            return signature.matches(".*(OnPointerDown|OnPointerUp|OnDisable|Update).*");
+            return signature.matches(".*(OnPointerDown|OnPointerUp|OnDisable).*");
         }
         if (type.equals("MobileTouchContextButton")) {
-            return signature.matches(".*(Update|StartAutoHold|OnDisable).*");
+            return signature.matches(".*(Update\\(\\)|UpdateAutoHold|StartAutoHold|OnDisable).*");
         }
-        if (type.equals("MobileTouchInventory")) {\n            return signature.matches(".*(Update|OnDisable|LateUpdate).*");\n        }\n        if (type.equals("MobileTouchAxis")) {
+        if (type.equals("MobileTouchInventory")) {
+            return signature.matches(".*(Update\\(\\)|UpdateSelection|LateUpdate|OnDisable).*");
+        }
+        if (type.equals("MobileTouchAxis")) {
             return signature.matches(".*(UpdateValue|OnDisable).*");
         }
         if (type.equals("OfflineFullGameBootstrap")) {
-            return signature.matches(".*(Awake|Start|Initialize|MenuReady|TryPlayOffline|TryStartHost|TryHostLan|TryJoinLan|ConfigureLanClientTransport|WaitForClientShip|SceneLoaded|LateUpdate|OnDestroy|Fail|RefreshHostEndpoint|HandlePendingClientDisconnect|StopPendingClient).*");
+            return signature.matches(".*(Initialize\\(|Awake\\(\\)|Start\\(\\)|MenuReady|TryPlayOffline|TryStartHost|TryHostLan|TryJoinLan|ConfigureLanClientTransport|WaitForClientShip|SceneLoaded|LateUpdate|OnDestroy|Fail|RefreshHostEndpoint).*");
         }
         if (type.equals("OfflineOriginalMainMenu")) {
-            return signature.matches(".*(Awake|Initialize|Start|ConfigureLanControls|CreateJoinPanel|ShowLanJoinPanel|HandleLanJoinRequest|UpdateLanJoinState|CancelLanJoin|CloseLanJoinPanel|OpenSaveSelection|OpenHostSaveSelection|ConfirmSelectedSave|Update|LateUpdate|OnDestroy).*");
+            return signature.matches(".*(Awake\\(\\)|Initialize\\(|Start\\(\\)|ConfigureLanControls|CreateJoinPanel|ShowLanJoinPanel|HandleLanJoinRequest|UpdateLanJoinState|CancelLanJoin|CloseLanJoinPanel|OpenSaveSelection|OpenHostSaveSelection|ConfirmSelectedSave|Update\\(\\)|LateUpdate|OnDestroy).*");
         }
         if (type.equals("PlayerControllerB")) {
-            return signature.matches(".*(Awake|Start|DisablePlayerModel|LateUpdate|RaycastSpectateCameraAroundPivot|SetWhoToSpectate|SpectateNextPlayer|KillPlayer|SetFreeCamera|Update).*");
-        }
-        if (type.equals("HUDManager")) {
-            return signature.matches(".*(Awake|Start|LateUpdate|Update).*");
+            return signature.matches(".*(Awake\\(\\)|Start\\(\\)|DisablePlayerModel|LateUpdate|RaycastSpectateCameraAroundPivot|SetWhoToSpectate|SpectateNextPlayer|KillPlayer\\(|SetFreeCamera_performed|Update\\(\\)).*");
         }
         return false;
     }
@@ -98,8 +98,7 @@ public class DecompileSelectedMethods extends GhidraScript {
         if (type.equals("OfflineFullGameBootstrap")) return 4;
         if (type.equals("OfflineOriginalMainMenu")) return 5;
         if (type.equals("PlayerControllerB")) return 6;
-        if (type.equals("HUDManager")) return 7;
-        return 8;
+        return 7;
     }
 
     private String safe(String value) {
@@ -244,7 +243,7 @@ public class DecompileSelectedMethods extends GhidraScript {
             if (!a.type.equals(b.type)) return a.type.compareTo(b.type);
             return Long.compare(a.rva,b.rva);
         });
-        int limit = Math.min(90, targets.size());
+        int limit = Math.min(120, targets.size());
         AddressSpace space = currentProgram.getAddressFactory().getDefaultAddressSpace();
 
         DecompInterface decompiler = new DecompInterface();
