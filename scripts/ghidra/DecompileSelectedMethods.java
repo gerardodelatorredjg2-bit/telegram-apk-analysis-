@@ -48,57 +48,31 @@ public class DecompileSelectedMethods extends GhidraScript {
     }
 
     private boolean isWanted(String type, String signature) {
-        if (type.equals("MobileControlsLayout")) {
-            return signature.matches(".*(CanHide|DefaultVisible|IsTerminalControl|CornerPosition).*");
-        }
-        if (type.equals("MobileControlsLayoutData")) {
-            return signature.matches(".*(Find|GetOrAdd|IsVisible).*");
-        }
-        if (type.equals("MobileGameViewFit")) {
-            return signature.matches(".*(CreateForAndroid|Awake\\(\\)|Update\\(\\)|ApplyForDisplay|TryGetDisplayedAspect|ApplyAspectCamera|RestoreAspectCamera|RestoreView|OnDisable|OnDestroy).*");
+        if (type.equals("PlayerControllerB")) {
+            return signature.matches(".*(Awake\\(\\)|DisablePlayerModel|LateUpdate).*");
         }
         if (type.equals("MobileTouchControls")) {
-            return signature.matches(".*(CreateForAndroid|Awake\\(\\)|BuildPersistentInputAnchors|BuildCanvas|BuildGameplayControls|BuildTerminalControls|MakeImage|MakeButton|MakeActionButton|MakeTerminalButton|LayoutActionButtons|UpdateActionButtons|UpdateExtraButtons|UpdateTerminalButtons|UpdateSafeArea|UpdateCanvasScale|UpdateInputMode|UpdateChatKeyboard|UpdateKeyboard|UpdateTerminalReference|OnSceneLoaded|StartTerminalKeyboard|OnDisable|OnDestroy|Update\\(\\)).*");
+            return signature.matches(".*(CreateForAndroid|Awake\\(\\)|BuildCanvas|BuildGameplayControls|BuildTerminalControls|UpdateChatKeyboard|UpdateTerminalButtons|Update\\(\\)).*");
         }
-        if (type.equals("MobileTouchLook")) {
-            return signature.matches(".*(Update\\(\\)|LateUpdate|SendLookDelta|OnDisable|OnPointerDown|OnDrag|OnPointerUp|InitializePointer|CommitLook).*");
-        }
-        if (type.equals("MobileTouchStick")) {
-            return signature.matches(".*(Start\\(\\)|OnPointerDown|OnDrag|OnPointerUp|UpdateSprint|CancelInput|OnDisable).*");
-        }
-        if (type.equals("MobileTouchActionButton")) {
-            return signature.matches(".*(OnPointerDown|OnPointerUp|OnDisable).*");
-        }
-        if (type.equals("MobileTouchContextButton")) {
-            return signature.matches(".*(Update\\(\\)|UpdateAutoHold|StartAutoHold|OnDisable).*");
-        }
-        if (type.equals("MobileTouchInventory")) {
-            return signature.matches(".*(Update\\(\\)|UpdateSelection|LateUpdate|OnDisable).*");
-        }
-        if (type.equals("MobileTouchAxis")) {
-            return signature.matches(".*(UpdateValue|OnDisable).*");
+        if (type.equals("MobileGameViewFit")) {
+            return signature.matches(".*(CreateForAndroid|Awake\\(\\)|ApplyForDisplay|ApplyAspectCamera).*");
         }
         if (type.equals("OfflineFullGameBootstrap")) {
-            return signature.matches(".*(Initialize\\(|Awake\\(\\)|Start\\(\\)|MenuReady|TryPlayOffline|TryStartHost|TryHostLan|TryJoinLan|ConfigureLanClientTransport|WaitForClientShip|SceneLoaded|LateUpdate|OnDestroy|Fail|RefreshHostEndpoint).*");
+            return signature.matches(".*(TryHostLan|TryJoinLan|TryStartHost).*");
         }
         if (type.equals("OfflineOriginalMainMenu")) {
-            return signature.matches(".*(Awake\\(\\)|Initialize\\(|Start\\(\\)|ConfigureLanControls|CreateJoinPanel|ShowLanJoinPanel|HandleLanJoinRequest|UpdateLanJoinState|CancelLanJoin|CloseLanJoinPanel|OpenSaveSelection|OpenHostSaveSelection|ConfirmSelectedSave|Update\\(\\)|LateUpdate|OnDestroy).*");
-        }
-        if (type.equals("PlayerControllerB")) {
-            return signature.matches(".*(Awake\\(\\)|Start\\(\\)|DisablePlayerModel|LateUpdate|RaycastSpectateCameraAroundPivot|SetWhoToSpectate|SpectateNextPlayer|KillPlayer\\(|SetFreeCamera_performed|Update\\(\\)).*");
+            return signature.matches(".*(ConfigureLanControls|HandleLanJoinRequest).*");
         }
         return false;
     }
 
     private int priority(String type) {
-        if (type.equals("MobileControlsLayout") || type.equals("MobileControlsLayoutData")) return 0;
-        if (type.equals("MobileGameViewFit")) return 1;
-        if (type.equals("MobileTouchControls")) return 2;
-        if (type.startsWith("MobileTouch")) return 3;
-        if (type.equals("OfflineFullGameBootstrap")) return 4;
-        if (type.equals("OfflineOriginalMainMenu")) return 5;
-        if (type.equals("PlayerControllerB")) return 6;
-        return 7;
+        if (type.equals("PlayerControllerB")) return 0;
+        if (type.equals("MobileTouchControls")) return 1;
+        if (type.equals("MobileGameViewFit")) return 2;
+        if (type.equals("OfflineFullGameBootstrap")) return 3;
+        if (type.equals("OfflineOriginalMainMenu")) return 4;
+        return 5;
     }
 
     private String safe(String value) {
@@ -243,7 +217,7 @@ public class DecompileSelectedMethods extends GhidraScript {
             if (!a.type.equals(b.type)) return a.type.compareTo(b.type);
             return Long.compare(a.rva,b.rva);
         });
-        int limit = Math.min(120, targets.size());
+        int limit = Math.min(32, targets.size());
         AddressSpace space = currentProgram.getAddressFactory().getDefaultAddressSpace();
 
         DecompInterface decompiler = new DecompInterface();
