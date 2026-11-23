@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lethal Offline — Mobile HUD concept</title>
+<style>
+:root{color-scheme:dark;--line:rgba(255,255,255,.78);--muted:rgba(255,255,255,.24);--glass:rgba(8,14,18,.34)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:system-ui,sans-serif;background:#0c1113;color:#fff}
+body{display:grid;place-items:center;padding:24px}
+.frame{position:relative;width:min(100%,1120px);aspect-ratio:16/9;overflow:hidden;border:1px solid #394144;border-radius:16px;background:
+ radial-gradient(ellipse at 54% 44%,rgba(124,133,128,.25),transparent 32%),
+ linear-gradient(90deg,rgba(16,23,25,.94),rgba(30,38,38,.82) 46%,rgba(10,16,17,.96)),
+ repeating-linear-gradient(90deg,#222a2a 0 5%,#171e1f 5% 8%);box-shadow:0 28px 90px #0009}
+.frame:before{content:"";position:absolute;inset:8% 22% 10% 26%;border:2px solid #59615d55;transform:perspective(600px) rotateY(-8deg);background:linear-gradient(180deg,#11191b55,#28312e66 70%,#111719aa);box-shadow:0 0 60px #000a}
+.frame:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0007,transparent 18%,transparent 72%,#0009);pointer-events:none}
+.hud{position:absolute;z-index:2;inset:0}
+.status{position:absolute;left:2.5%;top:4%;width:142px;height:142px;display:grid;place-items:center}
+.status svg{width:100%;height:100%}
+.status .weight{position:absolute;bottom:2px;right:0;font-size:13px;color:#e2a35f}
+.utility{position:absolute;right:3%;top:5%;display:flex;gap:12px}
+.action-stack{position:absolute;right:3%;bottom:12%;display:flex;flex-direction:column;gap:12px;align-items:center}
+.action{width:62px;height:62px;display:grid;place-items:center;border:1.6px solid var(--line);border-radius:50%;background:var(--glass);box-shadow:0 4px 18px #0005;backdrop-filter:blur(4px)}
+.action img{width:33px;height:33px;filter:drop-shadow(0 1px 2px #0009)}
+.action.small{width:50px;height:50px}
+.action.small img{width:27px;height:27px}
+.action.context{border-color:#f2c47d;background:rgba(92,62,26,.44)}
+.joy{position:absolute;left:5%;bottom:10%;width:150px;height:150px}
+.joy img{position:absolute;inset:0;width:100%;height:100%}
+.joy .knob{width:68px;height:68px;left:41px;top:41px;inset:auto;filter:drop-shadow(0 4px 8px #0007)}
+.inventory{position:absolute;left:50%;bottom:3.5%;transform:translateX(-50%);display:flex;gap:9px}
+.slot{width:56px;height:56px;border:1.6px solid #7983d5aa;border-radius:9px;background:#090e1866;box-shadow:inset 0 0 15px #4f5b9a18}
+.slot.active{border-color:#aab4ff;box-shadow:0 0 16px #6476ff4a,inset 0 0 15px #6476ff33}
+.hint{position:absolute;left:50%;top:51%;transform:translate(-50%,-50%);font-size:13px;letter-spacing:.14em;color:#e5e8dc88;text-transform:uppercase}
+.note{width:min(100%,1120px);color:#aab3b6;font-size:13px;line-height:1.5;margin-top:12px}
+.note b{color:#fff}
+@media(max-width:650px){.status{width:90px;height:90px}.joy{width:110px;height:110px}.joy .knob{width:50px;height:50px;left:30px;top:30px}.action{width:48px;height:48px}.action img{width:26px;height:26px}.action-stack{gap:8px}.action.small{width:40px;height:40px}.action.small img{width:22px;height:22px}.slot{width:38px;height:38px}.inventory{gap:5px}}
+</style>
+</head>
+<body>
+<div>
+ <div class="frame" role="img" aria-label="Static visual concept for a mobile horror game HUD">
+  <div class="hud">
+   <div class="status">
+    <svg viewBox="0 0 140 140" aria-hidden="true">
+     <path d="M70 7 A63 63 0 1 1 69.9 7" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="5"/>
+     <path d="M70 7 A63 63 0 0 1 129 92" fill="none" stroke="#f1a14a" stroke-width="5" stroke-linecap="round"/>
+     <circle cx="70" cy="70" r="3" fill="#fff"/>
+     <circle cx="70" cy="70" r="50" fill="none" stroke="#fff" stroke-opacity=".22"/>
+     <path d="M70 29c-7 0-11 5-11 11v7l-10 12 7 16 4-2 3-10v34c0 5 8 5 8 0V77h2v20c0 5 8 5 8 0V63l5 12 5-1-1-18-12-13v-4c0-6-4-10-9-10z" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+    </svg><span class="weight">0 lb</span>
+   </div>
+   <div class="utility">
+    <div class="action small" title="Chat"><img src="svg/chat.svg" alt="Chat"></div>
+    <div class="action small" title="Menu"><img src="svg/settings.svg" alt="Menu"></div>
+   </div>
+   <div class="joy"><img src="svg/joystick-base.svg" alt=""><img class="knob" src="svg/joystick-knob.svg" alt="Joystick knob"></div>
+   <div class="action-stack">
+    <div class="action" title="Flashlight"><img src="svg/flashlight.svg" alt="Flashlight"></div>
+    <div class="action" title="Sprint"><img src="svg/sprint.svg" alt="Sprint"></div>
+    <div class="action" title="Scan"><img src="svg/scan.svg" alt="Scan"></div>
+    <div class="action" title="Crouch"><img src="svg/crouch.svg" alt="Crouch"></div>
+    <div class="action" title="Jump"><img src="svg/jump.svg" alt="Jump"></div>
+    <div class="action context" title="Move placeable object"><img src="svg/build-move.svg" alt="Build or move"></div>
+   </div>
+   <div class="hint">mobile control layout concept</div>
+   <div class="inventory"><div class="slot active"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
+  </div>
+ </div>
+ <div class="note"><b>Design preview only.</b> This page shows the new SVG style and proposed touch layout. It does not run the game or send input to Unity; the packaged IL2CPP controls still need runtime integration from the original source project.</div>
+</div>
+</body>
+</html>
