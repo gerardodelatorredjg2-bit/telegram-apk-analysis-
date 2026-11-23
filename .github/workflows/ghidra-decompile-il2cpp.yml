@@ -75,6 +75,7 @@ jobs:
             "$PWD/output/ghidra-projects" LethalOfflineIL2CPP \
             -import "$PWD/extracted/libil2cpp.so" \
             -overwrite \
+            -noanalysis \
             -scriptPath "$PWD/scripts/ghidra" \
             -postScript DecompileSelectedMethods.java \
               "$PWD/reverse/dump/dump.cs" "$PWD/output/decompiled" \
