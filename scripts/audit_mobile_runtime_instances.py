@@ -1,111 +1,63 @@
 #!/usr/bin/env python3
-"""Audit whether mobile runtime MonoBehaviours are serialized into the original APK.
-
-Read-only. Resolves IL2CPP MonoBehaviour script IDs using UnityPy's generated
-typetree and records owner GameObjects, enabled/active state, and scene assets.
-"""
+"""Read-only check for serialized mobile controls and offline bootstrap instances."""
 from __future__ import annotations
 import json
 from collections import Counter
 from pathlib import Path
 import UnityPy
-from UnityPy.helpers.TypeTreeGenerator import TypeTreeGenerator
 
-ROOT = Path("work/apk")
-DATA = ROOT / "assets/bin/Data"
-OUT = Path("output/mobile-runtime-instance-audit.json")
-TARGETS = {
-    "MobileTouchControls", "MobileGameViewFit", "MobileTouchLook",
-    "OfflineFullGameBootstrap", "OfflineOriginalMainMenu",
-    "MobilePerformanceMode", "MobileControlsLayoutEditor",
-}
-PREFIXES = ("MobileTouch", "MobileGameViewFit", "OfflineFullGameBootstrap",
-            "OfflineOriginalMainMenu", "MobilePerformanceMode")
-def plain(x):
-    if x is None or isinstance(x, (str, int, float, bool)): return x
-    if hasattr(x, "m_PathID"): return int(x.m_PathID)
-    if isinstance(x, (list, tuple)): return [plain(v) for v in x[:80]]
-    if isinstance(x, dict): return {str(k): plain(v) for k,v in list(x.items())[:80]}
-    return str(x)[:240]
-
-env = UnityPy.load(str(DATA))
-unity_version = next((str(getattr(o.assets_file, "unity_version", "")) for o in env.objects
-                      if getattr(o.assets_file, "unity_version", "")), "")
-if not unity_version: raise RuntimeError("Unity version not found in serialized assets")
-generator = TypeTreeGenerator(unity_version)
-generator.load_il2cpp((ROOT / "lib/arm64-v8a/libil2cpp.so").read_bytes(),
-                      (DATA / "Managed/Metadata/global-metadata.dat").read_bytes())
-env.typetree_generator = generator
-
-scripts, objects = {}, {}
-for o in env.objects:
-    if o.type.name == "MonoScript":
-        try:
-            d=o.read_typetree()
-            scripts[int(o.path_id)] = {
-                "class": str(d.get("m_ClassName","") or ""),
-                "namespace": str(d.get("m_Namespace","") or ""),
-                "assembly": str(d.get("m_AssemblyName","") or ""),
-            }
-        except Exception: pass
-    elif o.type.name == "GameObject":
-        try:
-            d=o.read_typetree()
-            objects[int(o.path_id)] = {
-                "name": str(d.get("m_Name","") or ""),
-                "active": bool(d.get("m_IsActive", True)),
-            }
-        except Exception: pass
-
-components=[]
+DATA=Path("work/apk/assets/bin/Data")
+OUT=Path("output/mobile-runtime-instance-audit.json")
+PREFIXES=("MobileTouch","MobileGameViewFit","OfflineFullGameBootstrap","OfflineOriginalMainMenu","MobilePerformanceMode")
+TARGETS={"MobileTouchControls","MobileGameViewFit","OfflineFullGameBootstrap","OfflineOriginalMainMenu","MobilePerformanceMode"}
+def get_script(ref):
+    if ref is None: return None
+    try: return ref.deref_parse_as_object()
+    except Exception: return None
+def get_owner(ref):
+    if ref is None: return None
+    try: return ref.deref_parse_as_object()
+    except Exception: return None
+env=UnityPy.load(str(DATA))
 counts=Counter()
-parse_errors=[]
-for o in env.objects:
-    if o.type.name != "MonoBehaviour": continue
+components=[]
+errors=[]
+scripts=set()
+for obj in env.objects:
+    if obj.type.name!="MonoBehaviour": continue
     try:
-        h=o.parse_monobehaviour_head()
-        sid=int(getattr(getattr(h,"m_Script",None),"m_PathID",0) or 0)
-        gid=int(getattr(getattr(h,"m_GameObject",None),"m_PathID",0) or 0)
-        s=scripts.get(sid,{})
-        cls=s.get("class","")
-        ns=s.get("namespace","")
-        assembly=s.get("assembly","")
+        head=obj.parse_monobehaviour_head()
+        script=get_script(getattr(head,"m_Script",None))
+        if script is None: continue
+        cls=str(getattr(script,"m_ClassName","") or "")
+        ns=str(getattr(script,"m_Namespace","") or "")
+        assembly=str(getattr(script,"m_AssemblyName","") or "")
         if not (cls in TARGETS or any(cls.startswith(p) for p in PREFIXES)): continue
-        full=f"{ns}.{cls}" if ns else cls
-        fields={}
-        try:
-            node=generator.get_nodes_up(assembly, full)
-            if node: fields=o.read_typetree(nodes=node)
-        except Exception as e:
-            parse_errors.append({"class":full,"error":str(e)[:300]})
-        go=objects.get(gid,{})
+        owner=get_owner(getattr(head,"m_GameObject",None))
         row={
-            "class":full, "assembly":assembly,
-            "asset_file":str(getattr(o.assets_file,"name","")),
-            "component_path_id":int(o.path_id),
-            "gameobject_path_id":gid, "gameobject":go.get("name",""),
-            "gameobject_active":go.get("active"),
-            "enabled":plain(fields.get("m_Enabled")) if fields else None,
-            "serialized_fields": {k:plain(v) for k,v in fields.items()
-                                  if k in {"m_Enabled","m_EditorHideFlags","m_Name","m_ExecutionOrder"}},
+            "class":f"{ns}.{cls}".strip("."),
+            "assembly":assembly,
+            "asset_file":str(getattr(obj.assets_file,"name","")),
+            "component_path_id":int(obj.path_id),
+            "gameobject_path_id":int(getattr(getattr(head,"m_GameObject",None),"m_PathID",0) or 0),
+            "gameobject":str(getattr(owner,"m_Name","") or "") if owner else "",
+            "gameobject_active":bool(getattr(owner,"m_IsActive",True)) if owner else None,
+            "enabled":bool(getattr(head,"m_Enabled",True)),
         }
-        components.append(row); counts[full]+=1
+        components.append(row)
+        counts[row["class"]]+=1
+        scripts.add((row["class"],assembly))
     except Exception as e:
-        parse_errors.append({"path_id":int(o.path_id),"error":str(e)[:300]})
-
+        errors.append({"path_id":int(obj.path_id),"error":str(e)[:300]})
 report={
-    "unity_version":unity_version,
     "unitypy_version":getattr(UnityPy,"__version__","unknown"),
-    "mono_script_count":len(scripts),
-    "matching_script_definitions":[{"class":f'{s["namespace"]}.{s["class"]}'.strip("."),
-                                    "assembly":s["assembly"],"path_id":pid}
-                                   for pid,s in scripts.items()
-                                   if s["class"] in TARGETS or any(s["class"].startswith(p) for p in PREFIXES)],
+    "mono_behaviour_instances_scanned":sum(1 for o in env.objects if o.type.name=="MonoBehaviour"),
+    "matching_script_definitions":[{"class":c,"assembly":a} for c,a in sorted(scripts)],
     "serialized_component_counts":dict(counts),
     "serialized_components":components,
-    "parse_errors":parse_errors[:200],
-    "conclusion_note":"A class present in IL2CPP metadata does not prove a scene instance. This report checks serialized MonoBehaviour instances in the original APK; runtime-created instances still require call-site analysis or an Android device test."
+    "parse_errors":errors[:200],
+    "note":"This is a static inventory of serialized instances. Runtime-created components still require examining their callers or testing the app on an Android device."
 }
 OUT.parent.mkdir(parents=True,exist_ok=True)
 OUT.write_text(json.dumps(report,indent=2,ensure_ascii=False))
-print(json.dumps({k:report[k] for k in ("unity_version","mono_script_count","matching_script_definitions","serialized_component_counts","serialized_components","parse_errors","conclusion_note")},indent=2,ensure_ascii=False))
+print(json.dumps(report,indent=2,ensure_ascii=False))
