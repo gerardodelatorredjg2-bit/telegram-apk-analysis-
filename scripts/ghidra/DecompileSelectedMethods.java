@@ -48,15 +48,44 @@ public class DecompileSelectedMethods extends GhidraScript {
     }
 
     private boolean isWanted(String type, String signature) {
-        if (type.equals("MobileControlsLayout") || type.equals("MobileControlsLayoutData") ||
-            type.equals("MobileControlsLayoutEntry") || type.equals("MobileTouchControls") ||
-            type.equals("MobileGameViewFit") || type.equals("MobileTouchStick") ||
-            type.equals("MobileTouchAxis") || type.equals("MobileTouchActionButton") ||
-            type.equals("MobileTouchContextButton") || type.equals("MobileTouchLook") ||
-            type.equals("OfflineFullGameBootstrap") || type.equals("PlayerControllerB") ||
-            type.equals("HUDManager") || type.equals("DissonanceComms") ||
-            type.equals("StartOfRound")) {
-            return METHOD_FILTER.matcher(signature).find();
+        if (type.equals("MobileControlsLayout")) {
+            return signature.matches(".*(CanHide|DefaultVisible|IsTerminalControl|CornerPosition).*");
+        }
+        if (type.equals("MobileControlsLayoutData")) {
+            return signature.matches(".*(Find|GetOrAdd|IsVisible).*");
+        }
+        if (type.equals("MobileGameViewFit")) {
+            return signature.matches(".*(CreateForAndroid|Awake|Update|ApplyForDisplay|TryGetDisplayedAspect|ApplyAspectCamera|RestoreAspectCamera|RestoreView|OnDisable|OnDestroy).*");
+        }
+        if (type.equals("MobileTouchControls")) {
+            return signature.matches(".*(CreateForAndroid|Awake|BuildPersistentInputAnchors|BuildCanvas|BuildGameplayControls|BuildTerminalControls|MakeImage|MakeButton|MakeActionButton|MakeTerminalButton|LayoutActionButtons|UpdateActionButtons|UpdateExtraButtons|UpdateTerminalButtons|UpdateSafeArea|UpdateCanvasScale|UpdateInputMode|UpdateChatKeyboard|UpdateKeyboard|UpdateTerminalReference|OnSceneLoaded|StartTerminalKeyboard|OnDisable|OnDestroy|Update).*");
+        }
+        if (type.equals("MobileTouchLook")) {
+            return signature.matches(".*(Update|LateUpdate|SendLookDelta|OnDisable|OnPointerDown|OnDrag|OnPointerUp|InitializePointer|CommitLook).*");
+        }
+        if (type.equals("MobileTouchStick")) {
+            return signature.matches(".*(Start|OnPointerDown|OnDrag|OnPointerUp|UpdateSprint|CancelInput|OnDisable).*");
+        }
+        if (type.equals("MobileTouchActionButton")) {
+            return signature.matches(".*(OnPointerDown|OnPointerUp|OnDisable|Update).*");
+        }
+        if (type.equals("MobileTouchContextButton")) {
+            return signature.matches(".*(Update|StartAutoHold|OnDisable).*");
+        }
+        if (type.equals("MobileTouchInventory")) {\n            return signature.matches(".*(Update|OnDisable|LateUpdate).*");\n        }\n        if (type.equals("MobileTouchAxis")) {
+            return signature.matches(".*(UpdateValue|OnDisable).*");
+        }
+        if (type.equals("OfflineFullGameBootstrap")) {
+            return signature.matches(".*(Awake|Start|Initialize|MenuReady|TryPlayOffline|TryStartHost|TryHostLan|TryJoinLan|ConfigureLanClientTransport|WaitForClientShip|SceneLoaded|LateUpdate|OnDestroy|Fail|RefreshHostEndpoint|HandlePendingClientDisconnect|StopPendingClient).*");
+        }
+        if (type.equals("OfflineOriginalMainMenu")) {
+            return signature.matches(".*(Awake|Initialize|Start|ConfigureLanControls|CreateJoinPanel|ShowLanJoinPanel|HandleLanJoinRequest|UpdateLanJoinState|CancelLanJoin|CloseLanJoinPanel|OpenSaveSelection|OpenHostSaveSelection|ConfirmSelectedSave|Update|LateUpdate|OnDestroy).*");
+        }
+        if (type.equals("PlayerControllerB")) {
+            return signature.matches(".*(Awake|Start|DisablePlayerModel|LateUpdate|RaycastSpectateCameraAroundPivot|SetWhoToSpectate|SpectateNextPlayer|KillPlayer|SetFreeCamera|Update).*");
+        }
+        if (type.equals("HUDManager")) {
+            return signature.matches(".*(Awake|Start|LateUpdate|Update).*");
         }
         return false;
     }
@@ -67,11 +96,10 @@ public class DecompileSelectedMethods extends GhidraScript {
         if (type.equals("MobileTouchControls")) return 2;
         if (type.startsWith("MobileTouch")) return 3;
         if (type.equals("OfflineFullGameBootstrap")) return 4;
-        if (type.equals("PlayerControllerB")) return 5;
-        if (type.equals("HUDManager")) return 6;
-        if (type.equals("DissonanceComms")) return 7;
-        if (type.equals("StartOfRound")) return 8;
-        return 9;
+        if (type.equals("OfflineOriginalMainMenu")) return 5;
+        if (type.equals("PlayerControllerB")) return 6;
+        if (type.equals("HUDManager")) return 7;
+        return 8;
     }
 
     private String safe(String value) {
