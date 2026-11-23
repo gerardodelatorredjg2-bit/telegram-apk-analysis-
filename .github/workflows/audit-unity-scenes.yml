@@ -80,4 +80,5 @@ jobs:
           path: |
             output/scene-camera-audit.json
             output/scene-camera-audit.md
+            output/splash-previews/
           retention-days: 30
