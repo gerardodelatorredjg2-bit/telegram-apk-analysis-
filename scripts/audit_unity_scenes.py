@@ -203,9 +203,20 @@ for obj in objects:
             target_error = ""
             if pointer is not None:
                 try:
-                    target = pointer.deref_parse_as_object()
+                    target_reader = pointer.deref()
+                    target = target_reader.read()
                     target_name = str(getattr(target, "m_Name", "") or getattr(target, "name", "") or "")
                     target_type = type(target).__name__
+                    try:
+                        preview = getattr(target, "image", None)
+                        if preview is not None:
+                            preview_dir = OUT / "splash-previews"
+                            preview_dir.mkdir(parents=True, exist_ok=True)
+                            path_id = int(getattr(pointer, "m_PathID", 0) or 0)
+                            preview_path = preview_dir / f"splash-logo-{path_id}.png"
+                            preview.save(preview_path)
+                    except Exception:
+                        pass
                 except Exception as exc:
                     target_error = str(exc)[:200]
             logo_entries.append({
