@@ -321,10 +321,22 @@ for (asset, go_id), go_name in go_names.items():
     if not (go_name.startswith("Quad_FixFogRendering") or go_name in ("FogExclusionZone", "Foggy", "SpookyFog")):
         continue
     transform = transform_by_go_object.get((asset, go_id), {})
+    hierarchy = []
+    current_transform_id = transform_by_go.get((asset, go_id))
+    seen_transforms = set()
+    for _ in range(12):
+        if not current_transform_id or current_transform_id in seen_transforms:
+            break
+        seen_transforms.add(current_transform_id)
+        node = transforms.get((asset, current_transform_id), {})
+        node_go_id = ptr_id(field(node, "m_GameObject"))
+        hierarchy.append(go_names.get((asset, node_go_id), ""))
+        current_transform_id = ptr_id(field(node, "m_Father"))
     record = {
         "asset_file": asset,
         "gameobject_path_id": go_id,
         "gameobject": go_name,
+        "hierarchy_root_to_leaf": list(reversed([name for name in hierarchy if name])),
         "local_position": vector(field(transform, "m_LocalPosition")),
         "local_rotation": vector(field(transform, "m_LocalRotation")),
         "local_scale": vector(field(transform, "m_LocalScale")),
