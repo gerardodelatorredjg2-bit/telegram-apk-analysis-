@@ -136,7 +136,7 @@ def camera_summary(asset, obj, data, go_names, transform_by_go, transforms, came
 
 env = UnityPy.load(str(DATA))
 objects = list(env.objects)
-scene_re = re.compile(r"^level\d+$, re.IGNORECASE)
+scene_re = re.compile(r"^level\d+$", re.IGNORECASE)
 
 go_names = {}
 transform_by_go = {}
