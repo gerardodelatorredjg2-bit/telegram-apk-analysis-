@@ -1,0 +1,57 @@
+name: Package original-fidelity camera probe for download
+
+on:
+  push:
+    paths:
+      - ".github/workflows/package-camera-probe-download.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Prepare 7z
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full
+          mkdir -p input package
+
+      - name: Download verified camera-probe artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lethal-offline-original-fidelity-camera-probe
+          repository: ${{ github.repository }}
+          run-id: 45090036861
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+
+      - name: Check input files and build compressed package
+        run: |
+          set -euo pipefail
+          APK="input/LethalOffline-OriginalFidelity-CameraProbe.apk"
+          test -s "$APK"
+          test -s input/LethalOffline-OriginalFidelity-CameraProbe.apk.sha256
+          test -s input/camera-probe-report.json
+          7z a -t7z -m0=lzma2 -mx=3 -mmt=on \
+            package/LethalOffline-OriginalFidelity-CameraProbe.7z \
+            "$APK" \
+            input/LethalOffline-OriginalFidelity-CameraProbe.apk.sha256 \
+            input/camera-probe-report.json \
+            input/apk-badging.txt
+          7z t package/LethalOffline-OriginalFidelity-CameraProbe.7z
+          sha256sum package/LethalOffline-OriginalFidelity-CameraProbe.7z > package/LethalOffline-OriginalFidelity-CameraProbe.7z.sha256
+          ls -lh package/*
+
+      - name: Upload compressed download package
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-original-fidelity-camera-probe-7z
+          path: |
+            package/LethalOffline-OriginalFidelity-CameraProbe.7z
+            package/LethalOffline-OriginalFidelity-CameraProbe.7z.sha256
+          compression-level: 0
+          retention-days: 30
