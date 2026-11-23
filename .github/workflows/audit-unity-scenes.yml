@@ -45,7 +45,7 @@ jobs:
           root=Path("work/apk/assets/bin/Data")
           groups={}
           for p in root.iterdir():
-    m=re.fullmatch(r"(.+)\.split(\d+)",p.name)
+          m=re.fullmatch(r"(.+)\.split(\d+)",p.name)
               if m:
                   groups.setdefault(m.group(1),[]).append((int(m.group(2)),p))
           for name,chunks in sorted(groups.items()):
