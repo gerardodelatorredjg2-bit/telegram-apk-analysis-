@@ -1,0 +1,62 @@
+name: Audit Android mobile runtime component instances
+
+on:
+  push:
+    paths:
+      - ".github/workflows/audit-mobile-runtime-instances.yml"
+      - "scripts/audit_mobile_runtime_instances.py"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download preserved original APK
+        uses: actions/download-artifact@v4
+        with:
+          name: original-apk
+          repository: ${{ github.repository }}
+          run-id: 45057515185
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+      - name: Extract and reassemble Unity data
+        run: |
+          set -euo pipefail
+          unzip -q input/original.apk -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path("work/apk/assets/bin/Data")
+          groups={}
+          for p in root.iterdir():
+              m=re.fullmatch(r"(.+)\\.split(\\d+)",p.name)
+              if m: groups.setdefault(m.group(1),[]).append((int(m.group(2)),p))
+          for name,chunks in groups.items():
+              chunks.sort()
+              if [i for i,_ in chunks] != list(range(len(chunks))):
+                  raise SystemExit(f"Missing split for {name}")
+              with (root/name).open("wb") as dst:
+                  for _,p in chunks:
+                      with p.open("rb") as src:
+                          while block:=src.read(8*1024*1024): dst.write(block)
+              for _,p in chunks: p.unlink()
+          PY
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install exact UnityPy version
+        run: python -m pip install --disable-pip-version-check "UnityPy==1.25.4"
+      - name: Audit mobile and bootstrap instances
+        run: python scripts/audit_mobile_runtime_instances.py
+      - name: Upload read-only audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-runtime-instance-audit
+          path: output/mobile-runtime-instance-audit.json
+          retention-days: 30
