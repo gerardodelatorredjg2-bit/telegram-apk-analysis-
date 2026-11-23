@@ -138,6 +138,74 @@ public class DecompileSelectedMethods extends GhidraScript {
             reader.close();
         }
 
+        // Add names for nearby IL2CPP methods so native calls in the pseudocode
+        // resolve to managed method names instead of anonymous func_0x... symbols.
+        // Only create labels (not functions) here to keep the focused decompilation fast.
+        List<Target> allMethods = new ArrayList<>();
+        String mapType = "";
+        String mapAssembly = "";
+        long mapRva = -1;
+        long mapVa = -1;
+        int mapLine = 0;
+        BufferedReader mapReader = new BufferedReader(new FileReader(dumpFile));
+        try {
+            String line;
+            int lineNumber = 0;
+            while ((line = mapReader.readLine()) != null) {
+                lineNumber++;
+                if (line.contains("// TypeDefIndex:")) {
+                    mapAssembly = "";
+                    Matcher assembly = Pattern.compile("Assembly:\\s*([^|]+)").matcher(line);
+                    if (assembly.find()) mapAssembly = assembly.group(1).trim();
+                }
+                Matcher type = TYPE_PATTERN.matcher(line);
+                if (type.find()) mapType = type.group(1).trim();
+                Matcher addressMatch = ADDRESS_PATTERN.matcher(line);
+                if (addressMatch.find()) {
+                    mapRva = Long.parseLong(addressMatch.group(1).substring(2), 16);
+                    mapVa = Long.parseLong(addressMatch.group(2).substring(2), 16);
+                    mapLine = lineNumber;
+                    continue;
+                }
+                if (mapRva >= 0) {
+                    String signature = line.trim();
+                    boolean relevantAssembly =
+                        mapAssembly.equals("LethalOffline.MobileControls.Runtime.dll") ||
+                        mapAssembly.equals("LethalRecovered.Gameplay.dll") ||
+                        mapAssembly.equals("UnityEngine.CoreModule.dll") ||
+                        mapAssembly.equals("UnityEngine.UI.dll") ||
+                        mapAssembly.equals("Unity.InputSystem.dll") ||
+                        mapAssembly.equals("Unity.InputSystem.UI.dll") ||
+                        mapAssembly.equals("Unity.InputSystem.OnScreen.dll");
+                    if (mapRva != 0 && mapVa != 0 && relevantAssembly) {
+                        allMethods.add(new Target(mapRva, mapVa, mapType, mapAssembly, signature, mapLine));
+                    }
+                    mapRva = -1;
+                    mapVa = -1;
+                }
+            }
+        } finally {
+            mapReader.close();
+        }
+
+        AddressSpace labelSpace = currentProgram.getAddressFactory().getDefaultAddressSpace();
+        Set<Long> labelled = new HashSet<>();
+        int labelsCreated = 0;
+        for (Target method : allMethods) {
+            if (!labelled.add(method.va)) continue;
+            Address methodAddress = labelSpace.getAddress(imageBase + method.va);
+            try {
+                String label = safe(method.type + "_" + method.signature);
+                if (label.length() > 100) label = label.substring(0, 100);
+                currentProgram.getSymbolTable().createLabel(
+                    methodAddress, label, SourceType.USER_DEFINED
+                );
+                labelsCreated++;
+            } catch (Exception ignored) {
+                // A shared generic RVA or existing loader symbol may already own the address.
+            }
+        }
+
         // Prioritize the mobile controls and atmosphere runtime, then gameplay camera/death/audio.
         targets.sort((a,b) -> {
             int pa = priority(a.type);
