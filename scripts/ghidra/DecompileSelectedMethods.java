@@ -6,6 +6,7 @@ import ghidra.app.script.GhidraScript;
 import ghidra.program.model.address.Address;
 import ghidra.program.model.address.AddressSpace;
 import ghidra.program.model.listing.Function;
+import ghidra.program.model.symbol.SourceType;
 import ghidra.util.task.TaskMonitor;
 
 import java.io.BufferedReader;
@@ -138,6 +139,7 @@ public class DecompileSelectedMethods extends GhidraScript {
             reader.close();
         }
 
+        long imageBase = currentProgram.getImageBase().getOffset();
         // Add names for nearby IL2CPP methods so native calls in the pseudocode
         // resolve to managed method names instead of anonymous func_0x... symbols.
         // Only create labels (not functions) here to keep the focused decompilation fast.
@@ -215,7 +217,6 @@ public class DecompileSelectedMethods extends GhidraScript {
             return Long.compare(a.rva,b.rva);
         });
         int limit = Math.min(60, targets.size());
-        long imageBase = currentProgram.getImageBase().getOffset();
         AddressSpace space = currentProgram.getAddressFactory().getDefaultAddressSpace();
 
         DecompInterface decompiler = new DecompInterface();
