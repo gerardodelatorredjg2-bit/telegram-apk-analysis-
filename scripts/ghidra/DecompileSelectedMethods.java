@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
 public class DecompileSelectedMethods extends GhidraScript {
     private static final Pattern TYPE_PATTERN =
         Pattern.compile("\\b(?:class|struct|enum|interface)\\s+([A-Za-z0-9_+<>]+)");
-    private static final Pattern RVA_PATTERN =
-        Pattern.compile("RVA:\\s*(0x[0-9A-Fa-f]+)");
+    private static final Pattern ADDRESS_PATTERN =
+        Pattern.compile("RVA:\\s*(0x[0-9A-Fa-f]+).*?VA:\\s*(0x[0-9A-Fa-f]+)");
     private static final Pattern METHOD_FILTER =
         Pattern.compile("(BuildGameplayControls|BuildCanvas|MakeActionButton|MakeButton|MakeImage|" +
             "BuildTerminalControls|MakeTerminalButton|UpdateTerminalButtons|UpdateActionButtons|" +
@@ -36,23 +36,41 @@ public class DecompileSelectedMethods extends GhidraScript {
 
     private static class Target {
         long rva;
+        long va;
         String type;
         String assembly;
         String signature;
         int sourceLine;
-        Target(long r, String t, String a, String s, int l) {
-            rva=r; type=t; assembly=a; signature=s; sourceLine=l;
+        Target(long r, long v, String t, String a, String s, int l) {
+            rva=r; va=v; type=t; assembly=a; signature=s; sourceLine=l;
         }
     }
 
     private boolean isWanted(String type, String signature) {
-        if (type.startsWith("MobileTouch") || type.contains("MobileAtmosphere")) return true;
+        if (type.equals("MobileTouchControls")) return METHOD_FILTER.matcher(signature).find();
+        if (type.equals("MobileTouchStick") || type.equals("MobileTouchAxis") ||
+            type.equals("MobileTouchActionButton") || type.equals("MobileTouchContextButton") ||
+            type.equals("MobileTouchLook")) {
+            return METHOD_FILTER.matcher(signature).find();
+        }
         if (type.equals("PlayerControllerB") || type.equals("HUDManager") ||
             type.equals("StartOfRound") || type.equals("DissonanceComms") ||
             type.contains("Spectat") || type.contains("Voice") || type.contains("Audio")) {
             return METHOD_FILTER.matcher(signature).find();
         }
         return false;
+    }
+
+    private int priority(String type) {
+        if (type.equals("MobileTouchControls")) return 0;
+        if (type.equals("MobileTouchStick")) return 1;
+        if (type.equals("MobileTouchActionButton")) return 2;
+        if (type.equals("MobileTouchContextButton")) return 3;
+        if (type.equals("MobileTouchAxis")) return 4;
+        if (type.equals("PlayerControllerB")) return 5;
+        if (type.equals("HUDManager")) return 6;
+        if (type.equals("DissonanceComms")) return 7;
+        return 8;
     }
 
     private String safe(String value) {
@@ -84,6 +102,7 @@ public class DecompileSelectedMethods extends GhidraScript {
         String currentType = "";
         String currentAssembly = "";
         long pendingRva = -1;
+        long pendingVa = -1;
         int pendingLine = 0;
         BufferedReader reader = new BufferedReader(new FileReader(dumpFile));
         try {
@@ -99,18 +118,20 @@ public class DecompileSelectedMethods extends GhidraScript {
                 Matcher type = TYPE_PATTERN.matcher(line);
                 if (type.find()) currentType = type.group(1).trim();
 
-                Matcher rva = RVA_PATTERN.matcher(line);
-                if (rva.find()) {
-                    pendingRva = Long.parseLong(rva.group(1).substring(2), 16);
+                Matcher addressMatch = ADDRESS_PATTERN.matcher(line);
+                if (addressMatch.find()) {
+                    pendingRva = Long.parseLong(addressMatch.group(1).substring(2), 16);
+                    pendingVa = Long.parseLong(addressMatch.group(2).substring(2), 16);
                     pendingLine = lineNumber;
                     continue;
                 }
                 if (pendingRva >= 0) {
                     String signature = line.trim();
-                    if (pendingRva != 0 && isWanted(currentType, signature) && seen.add(pendingRva)) {
-                        targets.add(new Target(pendingRva, currentType, currentAssembly, signature, pendingLine));
+                    if (pendingRva != 0 && pendingVa != 0 && isWanted(currentType, signature) && seen.add(pendingRva)) {
+                        targets.add(new Target(pendingRva, pendingVa, currentType, currentAssembly, signature, pendingLine));
                     }
                     pendingRva = -1;
+                    pendingVa = -1;
                 }
             }
         } finally {
@@ -119,15 +140,13 @@ public class DecompileSelectedMethods extends GhidraScript {
 
         // Prioritize the mobile controls and atmosphere runtime, then gameplay camera/death/audio.
         targets.sort((a,b) -> {
-            int pa = a.type.startsWith("MobileTouch") ? 0 :
-                (a.type.contains("MobileAtmosphere") ? 1 : 2);
-            int pb = b.type.startsWith("MobileTouch") ? 0 :
-                (b.type.contains("MobileAtmosphere") ? 1 : 2);
+            int pa = priority(a.type);
+            int pb = priority(b.type);
             if (pa != pb) return Integer.compare(pa,pb);
             if (!a.type.equals(b.type)) return a.type.compareTo(b.type);
             return Long.compare(a.rva,b.rva);
         });
-        int limit = Math.min(40, targets.size());
+        int limit = Math.min(60, targets.size());
         long imageBase = currentProgram.getImageBase().getOffset();
         AddressSpace space = currentProgram.getAddressFactory().getDefaultAddressSpace();
 
@@ -144,7 +163,9 @@ public class DecompileSelectedMethods extends GhidraScript {
         for (int i=0; i<limit; i++) {
             monitor.checkCancelled();
             Target target = targets.get(i);
-            Address address = space.getAddress(imageBase + target.rva);
+            // Use the explicit ELF virtual address from dump.cs (VA), not RVA.
+            // This APK's ARM64 libil2cpp.so has VA-RVA == 0x40000 for this module.
+            Address address = space.getAddress(imageBase + target.va);
             Function function = currentProgram.getFunctionManager().getFunctionAt(address);
             if (function == null) {
                 try {
@@ -159,7 +180,7 @@ public class DecompileSelectedMethods extends GhidraScript {
             output.append("\n").append("=".repeat(90)).append("\n");
             output.append("[").append(i+1).append("/").append(limit).append("] ")
                 .append(target.type).append(" | ").append(target.assembly).append("\n");
-            output.append(String.format("RVA=0x%X VA=0x%X (dump.cs line %d)%n", target.rva, imageBase + target.rva, target.sourceLine));
+            output.append(String.format("RVA=0x%X ELF_VA=0x%X Ghidra=0x%X (dump.cs line %d)%n", target.rva, target.va, imageBase + target.va, target.sourceLine));
             output.append(target.signature).append("\n");
             index.append(String.format("0x%X\t%s\t%s\t%s%n", target.rva, target.type, target.assembly, target.signature));
 
