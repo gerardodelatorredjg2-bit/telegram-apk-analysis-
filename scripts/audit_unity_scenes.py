@@ -365,11 +365,13 @@ for (asset, go_id), go_name in go_names.items():
             mesh = resolved_object(pointer, filter_obj)
             submeshes = list(getattr(mesh, "m_SubMeshes", []) or []) if mesh is not None else []
             bounds = getattr(mesh, "m_LocalAABB", None) if mesh is not None else None
+            vertex_data = getattr(mesh, "m_VertexData", None) if mesh is not None else None
+            vertex_count = int(getattr(vertex_data, "m_VertexCount", 0) or 0) if vertex_data is not None else int(getattr(mesh, "m_VertexCount", 0) or 0) if mesh is not None else None
             record["mesh_filters"].append({
                 "path_id": int(filter_obj.path_id),
                 "mesh_pointer": plain(pointer),
                 "mesh_name": str(getattr(mesh, "m_Name", "") or "") if mesh is not None else "",
-                "vertex_count": int(getattr(mesh, "m_VertexCount", 0) or 0) if mesh is not None else None,
+                "vertex_count": vertex_count,
                 "submesh_count": len(submeshes),
                 "index_count": sum(int(getattr(x, "indexCount", 0) or 0) for x in submeshes),
                 "bounds": plain(bounds),
