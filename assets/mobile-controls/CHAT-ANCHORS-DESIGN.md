@@ -1,10 +1,10 @@
 # Chat HUD — anchor/layout continuation
 
-Status: DESIGN IN PROGRESS — NOT integrated into the APK.
+Status: browser prototype updated; Unity/APK integration is BLOCKED pending editable Unity project/custom controls source.
 
 This continuation is for the chat anchoring/layout pass, not a project-completion marker. It preserves the current HUD concept while relocating the chat entry/panel to the left side so the upper-right utility group can remain settings-only.
 
-## Anchor specification (Unity RectTransform reference)
+## Current browser prototype state\n\nThe browser preview now supports opening/closing the chat, local mock message entry, and responsive panel sizing. It intentionally does not send messages over a network or alter gameplay. The panel is capped to a shorter middle-left area to reduce collision with the bottom-left joystick. Preview validation checklist is in `CHAT-HUD-PREVIEW-README.md`.\n\n## Anchor specification (Unity RectTransform reference)
 
 All positions are normalized to Canvas coordinates; use a Canvas Scaler with Scale With Screen Size and safe-area-aware root. These are proposed anchor values, to be tuned in preview/device testing:
 
