@@ -36,8 +36,24 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def get_attr(value, *names, default=None):
+    for name in names:
+        if hasattr(value, name):
+            return getattr(value, name)
+    return default
+
+
+def set_attr_existing(value, names, new_value):
+    for name in names:
+        if hasattr(value, name):
+            setattr(value, name, new_value)
+            return name
+    available = sorted(name for name in dir(value) if not name.startswith("_"))
+    raise AttributeError(f"Could not find any field from {names}; available={available[:80]}")
+
+
 def ptr_id(pointer) -> int:
-    return int(getattr(pointer, "m_PathID", 0) or 0)
+    return int(get_attr(pointer, "m_PathID", "path_id", default=0) or 0)
 
 
 def camera_records(root: Path):
@@ -49,22 +65,34 @@ def camera_records(root: Path):
             continue
         if obj.type.name == "GameObject":
             parsed = obj.parse_as_object()
-            gameobjects[int(obj.path_id)] = str(getattr(parsed, "m_Name", "") or "")
+            name = get_attr(parsed, "m_Name", "name", default="")
+            gameobjects[int(obj.path_id)] = str(name or "")
         elif obj.type.name == "Camera":
             camera_objects.append(obj)
     records = []
     for obj in camera_objects:
         camera = obj.parse_as_object()
-        go_id = ptr_id(getattr(camera, "m_GameObject", None))
+        go_pointer = get_attr(camera, "m_GameObject", "game_object")
+        go_id = ptr_id(go_pointer)
         go_name = gameobjects.get(go_id, "")
+        near_field = next(
+            (name for name in ("near_clip_plane", "m_NearClipPlane") if hasattr(camera, name)),
+            None,
+        )
+        if near_field is None:
+            raise AttributeError(
+                "UnityPy Camera object has no recognized near clip field; "
+                f"available={[name for name in dir(camera) if not name.startswith('_')]}"
+            )
         if go_name == "MainCamera":
             records.append({
                 "object": obj,
                 "camera": camera,
+                "near_field": near_field,
                 "gameobject_path_id": go_id,
                 "camera_path_id": int(obj.path_id),
                 "gameobject": go_name,
-                "near_clip": float(camera.m_NearClipPlane),
+                "near_clip": float(getattr(camera, near_field)),
             })
     return env, records
 
@@ -88,7 +116,7 @@ def main():
 
     changed_asset = None
     for item in records:
-        item["camera"].m_NearClipPlane = NEAR_AFTER
+        setattr(item["camera"], item["near_field"], NEAR_AFTER)
         item["object"].patch(item["camera"])
         changed_asset = item["object"].assets_file
 
