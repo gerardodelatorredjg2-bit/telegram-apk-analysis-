@@ -49,16 +49,13 @@ public class DecompileSelectedMethods extends GhidraScript {
 
     private boolean isWanted(String type, String signature) {
         if (type.equals("MobileControlsLayout") || type.equals("MobileControlsLayoutData") ||
-            type.equals("MobileControlsLayoutEntry")) return METHOD_FILTER.matcher(signature).find();
-        if (type.equals("MobileTouchControls") || type.equals("MobileGameViewFit")) return METHOD_FILTER.matcher(signature).find();
-        if (type.equals("MobileTouchStick") || type.equals("MobileTouchAxis") ||
-            type.equals("MobileTouchActionButton") || type.equals("MobileTouchContextButton") ||
-            type.equals("MobileTouchLook")) {
-            return METHOD_FILTER.matcher(signature).find();
-        }
-        if (type.equals("PlayerControllerB") || type.equals("HUDManager") ||
-            type.equals("StartOfRound") || type.equals("DissonanceComms") ||
-            type.equals("OfflineFullGameBootstrap") || type.contains("Spectat") || type.contains("Voice") || type.contains("Audio")) {
+            type.equals("MobileControlsLayoutEntry") || type.equals("MobileTouchControls") ||
+            type.equals("MobileGameViewFit") || type.equals("MobileTouchStick") ||
+            type.equals("MobileTouchAxis") || type.equals("MobileTouchActionButton") ||
+            type.equals("MobileTouchContextButton") || type.equals("MobileTouchLook") ||
+            type.equals("OfflineFullGameBootstrap") || type.equals("PlayerControllerB") ||
+            type.equals("HUDManager") || type.equals("DissonanceComms") ||
+            type.equals("StartOfRound")) {
             return METHOD_FILTER.matcher(signature).find();
         }
         return false;
@@ -66,15 +63,15 @@ public class DecompileSelectedMethods extends GhidraScript {
 
     private int priority(String type) {
         if (type.equals("MobileControlsLayout") || type.equals("MobileControlsLayoutData")) return 0;
-        if (type.equals("MobileTouchControls") || type.equals("MobileGameViewFit")) return 1;
-        if (type.equals("MobileTouchStick")) return 2;
-        if (type.equals("MobileTouchActionButton")) return 3;
-        if (type.equals("MobileTouchContextButton")) return 4;
-        if (type.equals("MobileTouchAxis")) return 5;
-        if (type.equals("PlayerControllerB")) return 6;
-        if (type.equals("HUDManager")) return 7;
-        if (type.equals("DissonanceComms")) return 8;
-        return 8;
+        if (type.equals("MobileGameViewFit")) return 1;
+        if (type.equals("MobileTouchControls")) return 2;
+        if (type.startsWith("MobileTouch")) return 3;
+        if (type.equals("OfflineFullGameBootstrap")) return 4;
+        if (type.equals("PlayerControllerB")) return 5;
+        if (type.equals("HUDManager")) return 6;
+        if (type.equals("DissonanceComms")) return 7;
+        if (type.equals("StartOfRound")) return 8;
+        return 9;
     }
 
     private String safe(String value) {
@@ -219,7 +216,7 @@ public class DecompileSelectedMethods extends GhidraScript {
             if (!a.type.equals(b.type)) return a.type.compareTo(b.type);
             return Long.compare(a.rva,b.rva);
         });
-        int limit = Math.min(100, targets.size());
+        int limit = Math.min(90, targets.size());
         AddressSpace space = currentProgram.getAddressFactory().getDefaultAddressSpace();
 
         DecompInterface decompiler = new DecompInterface();
