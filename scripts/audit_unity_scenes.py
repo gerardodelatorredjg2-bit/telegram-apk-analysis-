@@ -282,7 +282,7 @@ for obj in objects:
     except Exception:
         pass
 
-def resolved_object(pointer):
+def resolved_object(pointer, source_obj=None):
     if pointer is None:
         return None
     try:
@@ -291,7 +291,29 @@ def resolved_object(pointer):
         try:
             return pointer.deref().read()
         except Exception:
-            return None
+            pass
+    # Fall back to an explicit pathID scan so an unavailable PPtr dereference
+    # still identifies which serialized file owns the referenced resource.
+    path_id = ptr_id(pointer)
+    file_id = ptr_file_id(pointer)
+    source_asset = getattr(source_obj, "assets_file", None) if source_obj is not None else None
+    external_path = ""
+    if source_asset is not None and file_id > 0:
+        externals = list(getattr(source_asset, "externals", []) or [])
+        if file_id - 1 < len(externals):
+            external = externals[file_id - 1]
+            external_path = str(
+                getattr(external, "path", "")
+                or getattr(external, "asset_path", "")
+                or getattr(external, "name", "")
+                or ""
+            )
+    candidates = [
+        candidate for candidate in objects
+        if int(candidate.path_id) == path_id
+        and (not external_path or Path(str(getattr(candidate.assets_file, "name", ""))).name in Path(external_path).name)
+    ]
+    return candidates[0].parse_as_object() if candidates else None
 
 special_renderers = []
 special_fog_objects = []
@@ -314,18 +336,22 @@ for (asset, go_id), go_name in go_names.items():
         for renderer_obj, renderer_data in renderer_by_go.get((asset, go_id), []):
             materials = []
             for pointer in list(field(renderer_data, "m_Materials", default=[]) or []):
-                material = resolved_object(pointer)
+                material = resolved_object(pointer, renderer_obj)
                 if material is None:
                     materials.append({"pointer": plain(pointer), "resolve_error": True})
                     continue
                 shader_pointer = getattr(material, "m_Shader", None)
-                shader = resolved_object(shader_pointer)
+                shader = resolved_object(shader_pointer, renderer_obj)
                 materials.append({
                     "name": str(getattr(material, "m_Name", "") or ""),
                     "shader_name": str(getattr(shader, "m_Name", "") or "") if shader is not None else "",
                     "shader_pointer": plain(shader_pointer),
                     "render_queue": getattr(material, "m_CustomRenderQueue", None),
                     "pointer": plain(pointer),
+                    "external_refs": [
+                        str(getattr(ext, "path", "") or getattr(ext, "asset_path", "") or getattr(ext, "name", "") or "")
+                        for ext in (getattr(renderer_obj.assets_file, "externals", []) or [])
+                    ],
                 })
             record["renderers"].append({
                 "path_id": int(renderer_obj.path_id),
@@ -336,7 +362,7 @@ for (asset, go_id), go_name in go_names.items():
             })
         for filter_obj, filter_data in meshfilter_by_go.get((asset, go_id), []):
             pointer = field(filter_data, "m_Mesh")
-            mesh = resolved_object(pointer)
+            mesh = resolved_object(pointer, filter_obj)
             submeshes = list(getattr(mesh, "m_SubMeshes", []) or []) if mesh is not None else []
             bounds = getattr(mesh, "m_LocalAABB", None) if mesh is not None else None
             record["mesh_filters"].append({
@@ -347,6 +373,10 @@ for (asset, go_id), go_name in go_names.items():
                 "submesh_count": len(submeshes),
                 "index_count": sum(int(getattr(x, "indexCount", 0) or 0) for x in submeshes),
                 "bounds": plain(bounds),
+                "external_refs": [
+                    str(getattr(ext, "path", "") or getattr(ext, "asset_path", "") or getattr(ext, "name", "") or "")
+                    for ext in (getattr(filter_obj.assets_file, "externals", []) or [])
+                ],
             })
         special_renderers.append(record)
     else:
