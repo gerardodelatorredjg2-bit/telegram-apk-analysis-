@@ -208,7 +208,13 @@ for obj in objects:
                     target_name = str(getattr(target, "m_Name", "") or getattr(target, "name", "") or "")
                     target_type = type(target).__name__
                     try:
-                        preview = getattr(target, "image", None)
+                        sprite_data = getattr(target, "m_RD", None)
+                        texture_pointer = getattr(sprite_data, "texture", None)
+                        if texture_pointer is not None:
+                            texture = texture_pointer.deref_parse_as_object()
+                            preview = getattr(texture, "image", None)
+                        else:
+                            preview = getattr(target, "image", None)
                         if preview is not None:
                             preview_dir = OUT / "splash-previews"
                             preview_dir.mkdir(parents=True, exist_ok=True)
