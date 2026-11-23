@@ -71,11 +71,14 @@ jobs:
           GHIDRA_HOME="$(cat output/ghidra-home.txt)"
           mkdir -p output/ghidra-projects output/decompiled
           export JAVA_OPTS="-Xmx6G -Dfile.encoding=UTF-8"
+          mkdir -p ghidra-scripts
+          cp reverse/dump/ghidra.py reverse/dump/script.json ghidra-scripts/
+          cp scripts/ghidra/DecompileSelectedMethods.py ghidra-scripts/
           "$GHIDRA_HOME/support/analyzeHeadless" \
             "$PWD/output/ghidra-projects" LethalOfflineIL2CPP \
             -import "$PWD/extracted/libil2cpp.so" \
             -overwrite \
-            -scriptPath "$PWD/reverse/dump:$PWD/scripts/ghidra" \
+            -scriptPath "$PWD/ghidra-scripts" \
             -postScript ghidra.py \
             -postScript DecompileSelectedMethods.py \
               "$PWD/reverse/dump/dump.cs" "$PWD/output/decompiled" \
