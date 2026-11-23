@@ -117,3 +117,17 @@ Esto no establece por sí solo el origen definitivo de la APK del repositorio, q
 ## Regla de aceptación
 
 Este checkpoint es una auditoría con un candidato de cámara para prueba A/B. No es una release final y no marca como corregidos los bugs reportados. Mantener intacta la APK original y usarla como única base fiable hasta que pruebas comparativas justifiquen otra cosa.
+
+
+## Entrega multipartes verificada — 2026-11-22
+
+El empaquetado final del candidato se completó en el workflow [45102454666](https://github.com/gerardodelatorredjg2-bit/telegram-apk-analysis-/actions/runs/45102454666), conclusión `success`. Se publicaron y después se volvieron a descargar los dos volúmenes y el manifiesto. Los SHA-256 de los archivos 7z extraídos del envoltorio de GitHub Actions se comprobaron localmente contra el manifiesto de la misma build:
+
+- `LethalOffline-OriginalFidelity-CameraProbe.7z.001`: `9e79b4430aa6ff0dbb9b2b434ef1355f4d0ac60c730eae7f370257008cee3d08` (367,001,600 bytes).
+- `LethalOffline-OriginalFidelity-CameraProbe.7z.002`: `7ce557b73ff43d3528fc06200b51f3d3213a2c2e07e0bd1fe8c02bca9ee01d86` (155,462,265 bytes).
+- APK candidata extraída, tamaño: 537,154,335 bytes; SHA-256: `45ab7f215c188e36913034d662940fc33e2b11adb54d424e34202a9665c0ac68`.
+- El test de archivo 7z `7z t` se realizó en GitHub Actions y terminó correctamente. Los dos volúmenes también se descargaron desde el artefacto y sus hashes coincidieron exactamente con el manifiesto.
+- Artefactos de la última ejecución: volume 001 ID `14785553262`; volume 002 ID `14785807634`; manifest ID `14785538433`. Retención anunciada: 30 días, hasta 2026-12-23.
+- Guía reproducible de prueba física: `reports/CAMERA-PROBE-A-B-TEST.md`.
+
+La entrega de archivos queda verificada. La instalación y la prueba A/B en un dispositivo Android siguen como `NOT TESTED`; los archivos no deben interpretarse como una versión final ni como una corrección demostrada.
