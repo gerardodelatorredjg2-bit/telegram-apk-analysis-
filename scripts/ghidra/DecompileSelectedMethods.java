@@ -127,7 +127,7 @@ public class DecompileSelectedMethods extends GhidraScript {
             if (!a.type.equals(b.type)) return a.type.compareTo(b.type);
             return Long.compare(a.rva,b.rva);
         });
-        int limit = Math.min(180, targets.size());
+        int limit = Math.min(40, targets.size());
         long imageBase = currentProgram.getImageBase().getOffset();
         AddressSpace space = currentProgram.getAddressFactory().getDefaultAddressSpace();
 
@@ -148,6 +148,9 @@ public class DecompileSelectedMethods extends GhidraScript {
             Function function = currentProgram.getFunctionManager().getFunctionAt(address);
             if (function == null) {
                 try {
+                    // With -noanalysis, explicitly disassemble just this IL2CPP method,
+                    // then create the function so the decompiler can recover its CFG.
+                    disassemble(address);
                     function = createFunction(address, safe(target.type + "_" + target.signature) + "_0x" + Long.toHexString(target.rva));
                 } catch (Exception ignored) {
                     function = currentProgram.getFunctionManager().getFunctionAt(address);
