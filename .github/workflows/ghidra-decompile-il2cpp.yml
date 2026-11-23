@@ -1,0 +1,109 @@
+name: Ghidra decompile selected IL2CPP methods
+
+on:
+  push:
+    paths:
+      - ".github/workflows/ghidra-decompile-il2cpp.yml"
+      - "scripts/ghidra/DecompileSelectedMethods.py"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  decompile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout Ghidra scripts
+        uses: actions/checkout@v4
+
+      - name: Prepare workspace
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y unzip curl openjdk-21-jdk
+          mkdir -p input reverse extracted tools output/ghidra
+
+      - name: Download original APK
+        uses: actions/download-artifact@v4
+        with:
+          name: original-apk
+          repository: ${{ github.repository }}
+          run-id: 45057515185
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+
+      - name: Download IL2CPP dump
+        uses: actions/download-artifact@v4
+        with:
+          name: lethal-offline-il2cpp-reverse-analysis
+          repository: ${{ github.repository }}
+          run-id: 45095321554
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: reverse
+
+      - name: Extract binary and dumper output
+        run: |
+          set -euo pipefail
+          unzip -p input/original.apk lib/arm64-v8a/libil2cpp.so > extracted/libil2cpp.so
+          test -s extracted/libil2cpp.so
+          test -s reverse/dump/dump.cs
+          test -s reverse/dump/script.json
+          test -s reverse/dump/ghidra.py
+
+      - name: Download Ghidra 12.2
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 \
+            "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.2_build/ghidra_12.2_PUBLIC_20261016.zip" \
+            -o tools/ghidra.zip
+          unzip -q tools/ghidra.zip -d tools
+          GHIDRA_HOME="$(find tools -maxdepth 1 -type d -name 'ghidra_*_PUBLIC' | head -1)"
+          test -x "$GHIDRA_HOME/support/analyzeHeadless"
+          echo "$GHIDRA_HOME" > output/ghidra-home.txt
+          java -version
+
+      - name: Apply IL2CPP symbols and decompile selected gameplay methods
+        run: |
+          set -euo pipefail
+          GHIDRA_HOME="$(cat output/ghidra-home.txt)"
+          mkdir -p output/ghidra-projects output/decompiled
+          export JAVA_OPTS="-Xmx6G -Dfile.encoding=UTF-8"
+          "$GHIDRA_HOME/support/analyzeHeadless" \
+            "$PWD/output/ghidra-projects" LethalOfflineIL2CPP \
+            -import "$PWD/extracted/libil2cpp.so" \
+            -overwrite \
+            -scriptPath "$PWD/reverse/dump:$PWD/scripts/ghidra" \
+            -postScript ghidra.py \
+            -postScript DecompileSelectedMethods.py \
+              "$PWD/reverse/dump/dump.cs" "$PWD/output/decompiled" \
+            -analysisTimeoutPerFile 2400 \
+            -max-cpu 4 \
+            -deleteProject 2>&1 | tee output/ghidra-headless.log
+
+      - name: Summarize decompilation
+        if: always()
+        run: |
+          {
+            echo "### Ghidra analysis"
+            echo ""
+            if [ -f output/decompiled/selected-methods.c.txt ]; then
+              tail -5 output/decompiled/selected-methods.c.txt
+            else
+              echo "Selected method decompilation output was not generated. See ghidra-headless.log."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload decompiled method analysis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-ghidra-method-analysis
+          path: |
+            output/decompiled/
+            output/ghidra-headless.log
+            output/ghidra-home.txt
+          compression-level: 6
+          retention-days: 30
