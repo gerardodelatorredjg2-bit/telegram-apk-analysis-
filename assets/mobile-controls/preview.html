@@ -20,6 +20,14 @@ body{display:grid;place-items:center;padding:24px}
 .status svg{width:100%;height:100%}
 .status .weight{position:absolute;bottom:2px;right:0;font-size:13px;color:#e2a35f}
 .utility{position:absolute;right:3%;top:5%;display:flex;gap:12px}
+.chat-anchor{position:absolute;left:2.5%;top:23%;z-index:4}
+.chat-preview{position:absolute;left:9%;top:20%;width:min(36%,390px);height:58%;z-index:3;border:1px solid rgba(255,255,255,.4);border-radius:12px;background:rgba(6,12,16,.72);backdrop-filter:blur(5px);box-shadow:0 8px 30px #0006;display:flex;flex-direction:column}
+.chat-preview header{padding:10px 12px;border-bottom:1px solid #ffffff33;font-size:12px;letter-spacing:.08em}
+.chat-messages{padding:10px;display:flex;flex-direction:column;gap:8px;flex:1;font-size:12px;color:#d8dedc}
+.chat-messages p{margin:0;padding:6px 8px;border-radius:7px;background:#ffffff0b;max-width:90%}
+.chat-input{margin:8px;padding:8px;border:1px solid #ffffff40;border-radius:8px;color:#ffffff80;font-size:11px}
+.chat-preview .close{position:absolute;right:8px;top:7px;color:#ffffff99}
+@media(max-width:650px){.chat-preview{left:11%;width:75%;height:55%;top:22%}.chat-anchor{top:18%}}
 .action-stack{position:absolute;right:3%;bottom:12%;display:flex;flex-direction:column;gap:12px;align-items:center}
 .action{width:62px;height:62px;display:grid;place-items:center;border:1.6px solid var(--line);border-radius:50%;background:var(--glass);box-shadow:0 4px 18px #0005;backdrop-filter:blur(4px)}
 .action img{width:33px;height:33px;filter:drop-shadow(0 1px 2px #0009)}
@@ -52,8 +60,14 @@ body{display:grid;place-items:center;padding:24px}
     </svg><span class="weight">0 lb</span>
    </div>
    <div class="utility">
-    <div class="action small" title="Chat"><img src="svg/chat.svg" alt="Chat"></div>
-    <div class="action small" title="Menu"><img src="svg/settings.svg" alt="Menu"></div>
+    <div class="action small" title="Settings"><img src="svg/settings.svg" alt="Settings"></div>
+     
+   </div>
+   <div class="chat-anchor"><div class="action small" title="Chat"><img src="svg/chat.svg" alt="Chat"></div></div>
+   <div class="chat-preview" aria-label="Chat panel visual preview">
+    <header>TEAM CHAT <span class="close">×</span></header>
+    <div class="chat-messages"><p><b>Player 1:</b> Anyone near the terminal?</p><p><b>Player 2:</b> I'm coming back.</p><p><b>You:</b> Copy. Stay together.</p></div>
+    <div class="chat-input">Message…</div>
    </div>
    <div class="joy"><img src="svg/joystick-base.svg" alt=""><img class="knob" src="svg/joystick-knob.svg" alt="Joystick knob"></div>
    <div class="action-stack">
@@ -64,11 +78,11 @@ body{display:grid;place-items:center;padding:24px}
     <div class="action" title="Jump"><img src="svg/jump.svg" alt="Jump"></div>
     <div class="action context" title="Move placeable object"><img src="svg/build-move.svg" alt="Build or move"></div>
    </div>
-   <div class="hint">mobile control layout concept</div>
+   <div class="hint">chat panel anchor preview</div>
    <div class="inventory"><div class="slot active"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
   </div>
  </div>
- <div class="note"><b>Design preview only.</b> This page shows the new SVG style and proposed touch layout. It does not run the game or send input to Unity; the packaged IL2CPP controls still need runtime integration from the original source project.</div>
+ <div class="note"><b>Chat anchor preview only.</b> Chat is moved to a left-side panel in this visual mockup; settings remain top-right. Messages are dummy text and the panel is not interactive. It does not run the game or send input to Unity. Runtime integration still needs the editable Unity project/custom controls source.</div>
 </div>
 </body>
 </html>
