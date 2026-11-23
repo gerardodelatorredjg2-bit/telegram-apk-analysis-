@@ -136,7 +136,7 @@ def camera_summary(asset, obj, data, go_names, transform_by_go, transforms, came
 
 env = UnityPy.load(str(DATA))
 objects = list(env.objects)
-scene_re = re.compile(r"^level\\d+$", re.IGNORECASE)
+scene_re = re.compile(r"^level\d+$, re.IGNORECASE)
 
 go_names = {}
 transform_by_go = {}
@@ -189,7 +189,7 @@ for obj in objects:
         })
 
 scenes = []
-for asset in sorted(scene_counts, key=lambda s: (int(re.search(r"\\d+", s).group()) if re.search(r"\\d+", s) else 9999, s)):
+for asset in sorted(scene_counts, key=lambda s: (int(re.search(r"\d+", s).group()) if re.search(r"\d+", s) else 9999, s)):
     counts = scene_counts[asset]
     scenes.append({
         "scene_asset": asset,
