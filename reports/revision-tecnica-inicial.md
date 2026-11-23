@@ -32,7 +32,7 @@ En `PlayerSettings` del APK original se observan:
 - `m_ShowUnitySplashLogo = true`
 - Tres entradas configuradas en `m_SplashScreenLogos`, de dos segundos cada una.
 
-Es una pista concreta para revisar la secuencia de inicio. Antes de borrar logos hay que resolver a qué imagen corresponde cada referencia, para conservar la identidad del juego y dejar solo la secuencia solicitada.
+La extracción visual identificó las tres imágenes configuradas: la primera es el logotipo/título del juego (Sprite pathID 1198), la segunda es el emblema del perro de `@ZeekerssRBLX` (pathID 1199) y la tercera es el aviso `WARNING: FLASHING LIGHTS` (pathID 1200). El logo de Unity es una referencia separada (pathID 1197). Por tanto, los tres logos propios no son duplicados del logo de Unity; apagar `m_ShowUnitySplashLogo` eliminaría el único logo de Unity configurado, no una copia demostrada. Hay que confirmar si la segunda aparición que ve el usuario procede de otra pantalla de arranque antes de alterar estos ajustes.
 
 ## Controles móviles
 
