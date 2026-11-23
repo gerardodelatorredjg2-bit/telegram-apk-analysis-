@@ -1,0 +1,127 @@
+name: Build original-fidelity camera probe APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/build_original_fidelity_camera_probe.py"
+      - ".github/workflows/build-original-fidelity-camera-probe.yml"
+
+permissions:
+  actions: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout repository scripts
+        uses: actions/checkout@v4
+
+      - name: Prepare signing and archive tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk unzip zip
+          mkdir -p input work/apk output tools-download
+
+      - name: Download preserved original APK
+        uses: actions/download-artifact@v4
+        with:
+          name: original-apk
+          repository: ${{ github.repository }}
+          run-id: 45057515185
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+
+      - name: Download verified Android build tools
+        uses: actions/download-artifact@v4
+        with:
+          name: apk-re-tools
+          repository: ${{ github.repository }}
+          run-id: 45058791126
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: tools-download
+
+      - name: Extract original APK and reassemble Unity data
+        run: |
+          set -euo pipefail
+          unzip -q tools-download/apk-re-tools.zip -d .
+          unzip -q input/original.apk -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path("work/apk/assets/bin/Data")
+          groups = {}
+          for path in root.iterdir():
+              match = re.fullmatch(r"(.+)\.split(\d+)", path.name)
+              if match:
+                  groups.setdefault(match.group(1), []).append((int(match.group(2)), path))
+          for name, chunks in sorted(groups.items()):
+              chunks.sort()
+              ids = [index for index, _ in chunks]
+              if ids != list(range(ids[-1] + 1)):
+                  raise SystemExit(f"Missing chunk in {name}: {ids}")
+              target = root / name
+              with target.open("wb") as destination:
+                  for _, chunk in chunks:
+                      with chunk.open("rb") as source:
+                          while block := source.read(8 * 1024 * 1024):
+                              destination.write(block)
+              for _, chunk in chunks:
+                  chunk.unlink()
+          PY
+
+      - name: Install UnityPy
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Patch only player-camera near clipping
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "UnityPy==1.25.4"
+          python scripts/build_original_fidelity_camera_probe.py
+
+      - name: Align, sign, and verify APK
+        run: |
+          set -euo pipefail
+          BUILD_TOOLS="tools/android/build-tools/35.0.0"
+          test -x "$BUILD_TOOLS/zipalign"
+          test -x "$BUILD_TOOLS/apksigner"
+          keytool -genkeypair -v \
+            -keystore output/camera-probe.keystore \
+            -alias cameracandidate -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass changeit -keypass changeit \
+            -dname "CN=Lethal Offline Original Fidelity Camera Probe, OU=Community Build, O=Local"
+          "$BUILD_TOOLS/zipalign" -f -p 4 \
+            output/LethalOffline-OriginalFidelity-CameraProbe-unsigned.apk \
+            output/LethalOffline-OriginalFidelity-CameraProbe-aligned.apk
+          "$BUILD_TOOLS/apksigner" sign \
+            --ks output/camera-probe.keystore --ks-key-alias cameracandidate \
+            --ks-pass pass:changeit --key-pass pass:changeit \
+            --out output/LethalOffline-OriginalFidelity-CameraProbe.apk \
+            output/LethalOffline-OriginalFidelity-CameraProbe-aligned.apk
+          "$BUILD_TOOLS/zipalign" -c -v 4 output/LethalOffline-OriginalFidelity-CameraProbe.apk
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs output/LethalOffline-OriginalFidelity-CameraProbe.apk
+          "$BUILD_TOOLS/aapt" dump badging output/LethalOffline-OriginalFidelity-CameraProbe.apk | tee output/apk-badging.txt
+          grep -q "armeabi-v7a" output/apk-badging.txt
+          grep -q "arm64-v8a" output/apk-badging.txt
+          sha256sum output/LethalOffline-OriginalFidelity-CameraProbe.apk > output/LethalOffline-OriginalFidelity-CameraProbe.apk.sha256
+
+      - name: Verify APK archive integrity
+        run: |
+          set -euo pipefail
+          unzip -t output/LethalOffline-OriginalFidelity-CameraProbe.apk
+          ls -lh output/LethalOffline-OriginalFidelity-CameraProbe.apk
+
+      - name: Upload original-fidelity camera probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-original-fidelity-camera-probe
+          path: |
+            output/LethalOffline-OriginalFidelity-CameraProbe.apk
+            output/LethalOffline-OriginalFidelity-CameraProbe.apk.sha256
+            output/camera-probe-report.json
+            output/apk-badging.txt
+          compression-level: 0
+          retention-days: 30
