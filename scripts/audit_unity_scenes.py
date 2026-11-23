@@ -256,6 +256,103 @@ for obj in objects:
     except Exception as exc:
         player_splash.append({"error": str(exc)[:500]})
 
+# Inspect known fog-repair quads, fog exclusion volumes, and their render materials.
+object_lookup = {
+    (str(getattr(obj.assets_file, "name", "")), int(obj.path_id)): obj
+    for obj in objects
+}
+renderer_by_go = defaultdict(list)
+meshfilter_by_go = defaultdict(list)
+transform_by_go_object = {}
+for obj in objects:
+    asset = str(getattr(obj.assets_file, "name", ""))
+    if not scene_re.match(asset):
+        continue
+    try:
+        data = read_fields(obj)
+        go_id = ptr_id(field(data, "m_GameObject"))
+        if not go_id:
+            continue
+        if obj.type.name == "MeshRenderer":
+            renderer_by_go[(asset, go_id)].append((obj, data))
+        elif obj.type.name == "MeshFilter":
+            meshfilter_by_go[(asset, go_id)].append((obj, data))
+        elif obj.type.name in ("Transform", "RectTransform"):
+            transform_by_go_object[(asset, ptr_id(field(data, "m_GameObject")))] = data
+    except Exception:
+        pass
+
+def resolved_object(pointer):
+    if pointer is None:
+        return None
+    try:
+        return pointer.deref_parse_as_object()
+    except Exception:
+        try:
+            return pointer.deref().read()
+        except Exception:
+            return None
+
+special_renderers = []
+special_fog_objects = []
+for (asset, go_id), go_name in go_names.items():
+    if not (go_name.startswith("Quad_FixFogRendering") or go_name in ("FogExclusionZone", "Foggy", "SpookyFog")):
+        continue
+    transform = transform_by_go_object.get((asset, go_id), {})
+    record = {
+        "asset_file": asset,
+        "gameobject_path_id": go_id,
+        "gameobject": go_name,
+        "local_position": vector(field(transform, "m_LocalPosition")),
+        "local_rotation": vector(field(transform, "m_LocalRotation")),
+        "local_scale": vector(field(transform, "m_LocalScale")),
+        "renderers": [],
+        "mesh_filters": [],
+        "components": [],
+    }
+    if go_name.startswith("Quad_FixFogRendering"):
+        for renderer_obj, renderer_data in renderer_by_go.get((asset, go_id), []):
+            materials = []
+            for pointer in list(field(renderer_data, "m_Materials", default=[]) or []):
+                material = resolved_object(pointer)
+                if material is None:
+                    materials.append({"pointer": plain(pointer), "resolve_error": True})
+                    continue
+                shader_pointer = getattr(material, "m_Shader", None)
+                shader = resolved_object(shader_pointer)
+                materials.append({
+                    "name": str(getattr(material, "m_Name", "") or ""),
+                    "shader_name": str(getattr(shader, "m_Name", "") or "") if shader is not None else "",
+                    "shader_pointer": plain(shader_pointer),
+                    "render_queue": getattr(material, "m_CustomRenderQueue", None),
+                    "pointer": plain(pointer),
+                })
+            record["renderers"].append({
+                "path_id": int(renderer_obj.path_id),
+                "enabled": field(renderer_data, "m_Enabled"),
+                "cast_shadows": field(renderer_data, "m_CastShadows"),
+                "receive_shadows": field(renderer_data, "m_ReceiveShadows"),
+                "materials": materials,
+            })
+        for filter_obj, filter_data in meshfilter_by_go.get((asset, go_id), []):
+            pointer = field(filter_data, "m_Mesh")
+            mesh = resolved_object(pointer)
+            submeshes = list(getattr(mesh, "m_SubMeshes", []) or []) if mesh is not None else []
+            bounds = getattr(mesh, "m_LocalAABB", None) if mesh is not None else None
+            record["mesh_filters"].append({
+                "path_id": int(filter_obj.path_id),
+                "mesh_pointer": plain(pointer),
+                "mesh_name": str(getattr(mesh, "m_Name", "") or "") if mesh is not None else "",
+                "vertex_count": int(getattr(mesh, "m_VertexCount", 0) or 0) if mesh is not None else None,
+                "submesh_count": len(submeshes),
+                "index_count": sum(int(getattr(x, "indexCount", 0) or 0) for x in submeshes),
+                "bounds": plain(bounds),
+            })
+        special_renderers.append(record)
+    else:
+        # Keep the fog-volume object transform and activity status for focused diagnosis.
+        special_fog_objects.append(record)
+
 scenes = []
 for asset in sorted(scene_counts, key=lambda s: (int(re.search(r"\d+", s).group()) if re.search(r"\d+", s) else 9999, s)):
     counts = scene_counts[asset]
@@ -281,6 +378,8 @@ summary = {
     "cameras": camera_records,
     "light_count": len(light_records),
     "player_splash_settings": player_splash,
+    "special_renderers": special_renderers,
+    "special_fog_objects": special_fog_objects,
     "lights": light_records,
     "runtime_test_performed": False,
     "limitations": [
