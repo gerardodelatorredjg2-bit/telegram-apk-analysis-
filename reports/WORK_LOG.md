@@ -105,6 +105,15 @@ Cambio único:
 7. Hacer pruebas físicas de terminal/chat/audio/mic/multiplayer y rotación/safe area.
 8. Entregar un APK final solo cuando los cambios sean reales, firmados, comprobados y acompañados por resultados de prueba reproducibles.
 
+## Discrepancia de identidad que requiere confirmación
+
+El repositorio no permite identificar inequívocamente esta APK como el producto "Lethal Company Mobile" indicado en el encargo:
+- `assets/mobile-controls/svg/README.md` dice que la dirección visual de los SVG se basó en la referencia de Google Play `Mortal Company: Co-op Horror`.
+- La APK examinada se etiqueta `Lethal Offline Experimentation` y usa package ID `com.local.lethaloffline.fullgame`.
+- La ficha de Google Play de `Mortal Company: Co-op Horror` usa el package ID `com.AlexKosDev.lethal.company.mobile`; un registro externo de `Lethal Company Mobile` identifica otro package ID, `com.akg.lethalcompany`.
+
+Esto no establece por sí solo el origen definitivo de la APK del repositorio, que podría ser una variante/reempaquetado. No se ha cambiado su nombre, logo, paquete ni branding. Antes de modificar identidad visual o sistemas específicos del producto, confirmar que esta APK exacta es la base prevista por el encargo. El candidato de cámara descrito en este informe solo se refiere a esta APK recuperada del repositorio.
+
 ## Regla de aceptación
 
 Este checkpoint es una auditoría con un candidato de cámara para prueba A/B. No es una release final y no marca como corregidos los bugs reportados. Mantener intacta la APK original y usarla como única base fiable hasta que pruebas comparativas justifiquen otra cosa.
