@@ -27,7 +27,7 @@ public class DecompileSelectedMethods extends GhidraScript {
     private static final Pattern ADDRESS_PATTERN =
         Pattern.compile("RVA:\\s*(0x[0-9A-Fa-f]+).*?VA:\\s*(0x[0-9A-Fa-f]+)");
     private static final Pattern METHOD_FILTER =
-        Pattern.compile("(CreateForAndroid|BuildGameplayControls|BuildCanvas|ApplyAspectCamera|RestoreAspectCamera|MakeActionButton|MakeButton|MakeImage|" +
+        Pattern.compile("(CreateForAndroid|BuildGameplayControls|BuildCanvas|ApplyForDisplay|ApplyAspectCamera|RestoreAspectCamera|MakeActionButton|MakeButton|MakeImage|" +
             "BuildTerminalControls|MakeTerminalButton|UpdateTerminalButtons|UpdateActionButtons|" +
             "UpdateExtraButtons|IsLookingAtPlaceableShipObject|LayoutActionButtons|" +
             "BuildPersistentInputAnchors|DefaultVisible|CornerPosition|IsTerminalControl|CanHide|Find|GetOrAdd|IsVisible|Spectat|KillPlayer|SetPlayerDead|OnPlayerDeath|" +
