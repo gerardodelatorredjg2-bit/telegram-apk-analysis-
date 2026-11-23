@@ -1,4 +1,4 @@
-name: Package original-fidelity camera probe for download
+name: Package original-fidelity camera probe for download (split volumes)
 
 on:
   push:
@@ -29,29 +29,75 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: input
 
-      - name: Check input files and build compressed package
+      - name: Verify source and create split archive
         run: |
           set -euo pipefail
           APK="input/LethalOffline-OriginalFidelity-CameraProbe.apk"
           test -s "$APK"
           test -s input/LethalOffline-OriginalFidelity-CameraProbe.apk.sha256
           test -s input/camera-probe-report.json
-          7z a -t7z -m0=lzma2 -mx=3 -mmt=on \
+          test -s input/apk-badging.txt
+
+          7z a -t7z -m0=lzma2 -mx=3 -mmt=on -v350m \
             package/LethalOffline-OriginalFidelity-CameraProbe.7z \
             "$APK" \
             input/LethalOffline-OriginalFidelity-CameraProbe.apk.sha256 \
             input/camera-probe-report.json \
             input/apk-badging.txt
-          7z t package/LethalOffline-OriginalFidelity-CameraProbe.7z
-          sha256sum package/LethalOffline-OriginalFidelity-CameraProbe.7z > package/LethalOffline-OriginalFidelity-CameraProbe.7z.sha256
+
+          test -s package/LethalOffline-OriginalFidelity-CameraProbe.7z.001
+          test -s package/LethalOffline-OriginalFidelity-CameraProbe.7z.002
+          7z t package/LethalOffline-OriginalFidelity-CameraProbe.7z.001
+          (cd package && sha256sum \
+            LethalOffline-OriginalFidelity-CameraProbe.7z.001 \
+            LethalOffline-OriginalFidelity-CameraProbe.7z.002 > volumes.sha256)
+
+          cat > package/README-DOWNLOAD.txt <<'EOF'
+          LETHAL OFFLINE — ORIGINAL-FIDELITY CAMERA PROBE
+
+          THIS IS A TEST CANDIDATE, NOT A CONFIRMED GAMEPLAY FIX.
+          It starts from the preserved original APK and changes only the four
+          player MainCamera nearClipPlane values in Unity scene level3:
+          0.05 -> 0.10.
+
+          Download BOTH volumes and keep them in the same folder:
+          LethalOffline-OriginalFidelity-CameraProbe.7z.001
+          LethalOffline-OriginalFidelity-CameraProbe.7z.002
+
+          On Android, open the .001 file with ZArchiver or another 7-Zip-
+          compatible archiver and extract. On Windows, use 7-Zip to extract
+          starting from the .001 file. Verify both volumes with volumes.sha256.
+
+          The extracted APK is signed with a new community test key. Uninstall
+          any prior copy signed with a different key before installing.
+
+          Device testing is still required for the black-geometry symptom.
+          This candidate does not claim to fix fog, spectator, chat, terminal,
+          HUD integration, audio, microphone, or multiplayer.
+          EOF
           ls -lh package/*
 
-      - name: Upload compressed download package
+      - name: Upload archive volume 001
         uses: actions/upload-artifact@v4
         with:
-          name: lethal-offline-original-fidelity-camera-probe-7z
-          path: |
-            package/LethalOffline-OriginalFidelity-CameraProbe.7z
-            package/LethalOffline-OriginalFidelity-CameraProbe.7z.sha256
+          name: lethal-offline-camera-probe-volume-001
+          path: package/LethalOffline-OriginalFidelity-CameraProbe.7z.001
           compression-level: 0
+          retention-days: 30
+
+      - name: Upload archive volume 002
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-camera-probe-volume-002
+          path: package/LethalOffline-OriginalFidelity-CameraProbe.7z.002
+          compression-level: 0
+          retention-days: 30
+
+      - name: Upload checksums and installation notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-camera-probe-download-manifest
+          path: |
+            package/volumes.sha256
+            package/README-DOWNLOAD.txt
           retention-days: 30
