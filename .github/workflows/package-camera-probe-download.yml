@@ -52,13 +52,24 @@ jobs:
             LethalOffline-OriginalFidelity-CameraProbe.7z.001 \
             LethalOffline-OriginalFidelity-CameraProbe.7z.002 > volumes.sha256)
 
-          cat > package/README-DOWNLOAD.txt <<'EOF'
+          cp input/LethalOffline-OriginalFidelity-CameraProbe.apk.sha256 package/candidate-apk.sha256
+          cp input/camera-probe-report.json package/camera-probe-report.json
+          cp input/apk-badging.txt package/apk-badging.txt
+          candidate_sha="$(awk '{print $1}' package/candidate-apk.sha256)"
+          candidate_bytes="$(stat -c '%s' "$APK")"
+          original_sha="$(python3 -c 'import json; print(json.load(open("package/camera-probe-report.json"))["original_apk_sha256"])')"
+
+          cat > package/README-DOWNLOAD.txt <<EOF
           LETHAL OFFLINE — ORIGINAL-FIDELITY CAMERA PROBE
 
           THIS IS A TEST CANDIDATE, NOT A CONFIRMED GAMEPLAY FIX.
           It starts from the preserved original APK and changes only the four
           player MainCamera nearClipPlane values in Unity scene level3:
           0.05 -> 0.10.
+
+          Original APK SHA-256: $original_sha
+          Candidate signed APK size: $candidate_bytes bytes
+          Candidate signed APK SHA-256: $candidate_sha
 
           Download BOTH volumes and keep them in the same folder:
           LethalOffline-OriginalFidelity-CameraProbe.7z.001
@@ -100,4 +111,7 @@ jobs:
           path: |
             package/volumes.sha256
             package/README-DOWNLOAD.txt
+            package/candidate-apk.sha256
+            package/camera-probe-report.json
+            package/apk-badging.txt
           retention-days: 30
