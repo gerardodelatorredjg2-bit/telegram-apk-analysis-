@@ -188,6 +188,57 @@ for obj in objects:
             "color": plain(field(data, "m_Color")),
         })
 
+# Inspect PlayerSettings splash configuration without changing the APK.
+player_splash = []
+for obj in objects:
+    if obj.type.name != "PlayerSettings":
+        continue
+    try:
+        settings = obj.parse_as_object()
+        logo_entries = []
+        for entry in list(getattr(settings, "m_SplashScreenLogos", []) or []):
+            pointer = getattr(entry, "logo", None)
+            target_name = ""
+            target_type = ""
+            target_error = ""
+            if pointer is not None:
+                try:
+                    target = pointer.deref_parse_as_object()
+                    target_name = str(getattr(target, "m_Name", "") or getattr(target, "name", "") or "")
+                    target_type = type(target).__name__
+                except Exception as exc:
+                    target_error = str(exc)[:200]
+            logo_entries.append({
+                "duration_seconds": float(getattr(entry, "duration", 0.0) or 0.0),
+                "pointer": plain(pointer),
+                "resolved_name": target_name,
+                "resolved_type": target_type,
+                "resolve_error": target_error,
+            })
+        unity_logo_pointer = getattr(settings, "m_UnitySplashLogo", None)
+        unity_logo_name = ""
+        unity_logo_type = ""
+        unity_logo_error = ""
+        if unity_logo_pointer is not None:
+            try:
+                unity_logo = unity_logo_pointer.deref_parse_as_object()
+                unity_logo_name = str(getattr(unity_logo, "m_Name", "") or getattr(unity_logo, "name", "") or "")
+                unity_logo_type = type(unity_logo).__name__
+            except Exception as exc:
+                unity_logo_error = str(exc)[:200]
+        player_splash.append({
+            "show_unity_splash_screen": bool(getattr(settings, "m_ShowUnitySplashScreen", False)),
+            "show_unity_splash_logo": bool(getattr(settings, "m_ShowUnitySplashLogo", False)),
+            "splash_logo_count": len(logo_entries),
+            "splash_logos": logo_entries,
+            "unity_splash_logo_pointer": plain(unity_logo_pointer),
+            "unity_splash_logo_resolved_name": unity_logo_name,
+            "unity_splash_logo_resolved_type": unity_logo_type,
+            "unity_splash_logo_resolve_error": unity_logo_error,
+        })
+    except Exception as exc:
+        player_splash.append({"error": str(exc)[:500]})
+
 scenes = []
 for asset in sorted(scene_counts, key=lambda s: (int(re.search(r"\d+", s).group()) if re.search(r"\d+", s) else 9999, s)):
     counts = scene_counts[asset]
@@ -212,6 +263,7 @@ summary = {
     "camera_count": len(camera_records),
     "cameras": camera_records,
     "light_count": len(light_records),
+    "player_splash_settings": player_splash,
     "lights": light_records,
     "runtime_test_performed": False,
     "limitations": [
