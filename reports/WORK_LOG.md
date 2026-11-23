@@ -131,3 +131,12 @@ El empaquetado final del candidato se completó en el workflow [45102454666](htt
 - Guía reproducible de prueba física: `reports/CAMERA-PROBE-A-B-TEST.md`.
 
 La entrega de archivos queda verificada. La instalación y la prueba A/B en un dispositivo Android siguen como `NOT TESTED`; los archivos no deben interpretarse como una versión final ni como una corrección demostrada.
+
+
+## Chat-anchor continuation (ongoing)
+
+- Added `assets/mobile-controls/CHAT-ANCHORS-DESIGN.md` with a proposed Unity RectTransform anchor table, safe-area and keyboard behavior, placement constraints, and pending acceptance checks.
+- Updated `assets/mobile-controls/preview.html` to visualize chat entry on the left and a left-side chat panel; settings remains top-right and joystick remains bottom-left. The preview's messages/input are mock-only and not interactive.
+- Git commits: anchor spec `b92fb3c57b4ce941e2e89b609324010abe0358ea`; visual preview `b96a2619bb8dbc6c8010c88162f874426405402b`.
+- Static HTML readback checks: chat_anchor=PASS, chat_panel=PASS, settings_top_right=PASS, chat_svg=PASS, settings_svg=PASS, input_visual=PASS, joy_preserved=PASS.
+- This is design progress, not APK/runtime integration. The editable Unity project and custom controls source are still absent. Do not mark chat integration completed until actual runtime wiring, keyboard/input behavior and device layout have been tested.
