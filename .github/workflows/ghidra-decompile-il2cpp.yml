@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/ghidra-decompile-il2cpp.yml"
       - "scripts/ghidra/DecompileSelectedMethods.py"
+      - "scripts/ghidra/DecompileSelectedMethods.java"
   workflow_dispatch:
 
 permissions:
