@@ -140,3 +140,10 @@ La entrega de archivos queda verificada. La instalación y la prueba A/B en un d
 - Git commits: anchor spec `b92fb3c57b4ce941e2e89b609324010abe0358ea`; visual preview `b96a2619bb8dbc6c8010c88162f874426405402b`.
 - Static HTML readback checks: chat_anchor=PASS, chat_panel=PASS, settings_top_right=PASS, chat_svg=PASS, settings_svg=PASS, input_visual=PASS, joy_preserved=PASS.
 - This is design progress, not APK/runtime integration. The editable Unity project and custom controls source are still absent. Do not mark chat integration completed until actual runtime wiring, keyboard/input behavior and device layout have been tested.
+
+
+## Chat HUD continuation — preview polish
+- Browser prototype now has chat open/close, local mock message append, responsive panel sizing, and a shorter panel height intended to reduce overlap with bottom-left joystick.
+- Added `assets/mobile-controls/CHAT-HUD-PREVIEW-README.md` with usage and validation checklist.
+- Updated anchor design status: browser prototype work is distinct from Unity/APK integration.
+- Remaining runtime blockers: editable Unity project/custom mobile-controls source, Android keyboard/device testing, safe-area/RectTransform integration, gameplay-input regression test, and APK build/in-game validation. Do not call these done without access to project source and test results.
