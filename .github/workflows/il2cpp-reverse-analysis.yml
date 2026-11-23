@@ -1,0 +1,118 @@
+name: IL2CPP reverse analysis of original APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/il2cpp-reverse-analysis.yml"
+      - "scripts/analyze_il2cpp_dump.py"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout analysis scripts
+        uses: actions/checkout@v4
+
+      - name: Prepare workspace
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y unzip curl
+          mkdir -p input extracted tools output
+
+      - name: Download immutable original APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: original-apk
+          repository: ${{ github.repository }}
+          run-id: 45057515185
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+
+      - name: Extract ARM64 IL2CPP and metadata
+        run: |
+          set -euo pipefail
+          test -s input/original.apk
+          unzip -p input/original.apk lib/arm64-v8a/libil2cpp.so > extracted/libil2cpp.so
+          unzip -p input/original.apk assets/bin/Data/Managed/Metadata/global-metadata.dat > extracted/global-metadata.dat
+          test -s extracted/libil2cpp.so
+          test -s extracted/global-metadata.dat
+          file extracted/libil2cpp.so extracted/global-metadata.dat
+          sha256sum extracted/libil2cpp.so extracted/global-metadata.dat | tee output/input-sha256.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          p=Path("extracted/global-metadata.dat")
+          data=p.read_bytes()[:8]
+          magic,version=struct.unpack("<II",data)
+          print(f"metadata magic=0x{magic:08x}, version={version}")
+          if magic != 0xFAB11BAF:
+              raise SystemExit("Unexpected IL2CPP metadata magic")
+          PY
+
+      - name: Download standalone IL2CPP dumper
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 \
+            "https://github.com/MyDearMoon/il2cpp-Dumper/releases/download/v1.4.0/Il2CppDumper-linux-x64.tar.gz" \
+            -o tools/Il2CppDumper-linux-x64.tar.gz
+          tar -xzf tools/Il2CppDumper-linux-x64.tar.gz -C tools
+          find tools -maxdepth 3 -type f -printf '%p %s bytes\n' | head -80
+          TOOL="$(find tools -type f -name 'Il2CppDumper' | head -1)"
+          test -n "$TOOL"
+          chmod +x "$TOOL"
+          echo "$TOOL" > output/dumper-path.txt
+          "$TOOL" --help > output/dumper-help.txt 2>&1 || true
+
+      - name: Dump metadata, assemblies, symbols and Ghidra scripts
+        id: dump
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          TOOL="$(cat output/dumper-path.txt)"
+          mkdir -p output/dump
+          "$TOOL" \
+            "$PWD/extracted/libil2cpp.so" \
+            "$PWD/extracted/global-metadata.dat" \
+            "$PWD/output/dump" \
+            --unity 2022.3.62f2 \
+            --arch arm64 \
+            --all \
+            --no-open 2>&1 | tee output/il2cpp-dumper.log
+          status=${PIPESTATUS[0]}
+          echo "$status" > output/dumper-exit-code.txt
+          exit "$status"
+
+      - name: Build focused methods report
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 scripts/analyze_il2cpp_dump.py \
+            --dump output/dump/dump.cs \
+            --strings output/dump/stringliteral.json \
+            --out output/focused-report
+          {
+            echo "### IL2CPP dump status"
+            echo ""
+            echo "Dumper exit code: $(cat output/dumper-exit-code.txt 2>/dev/null || echo not-recorded)"
+            echo ""
+            find output/dump -maxdepth 2 -type f -printf '* %p (%s bytes)\n' 2>/dev/null | head -100
+            echo ""
+            echo "See uploaded artifact for the dump, dummy DLLs, method report and Ghidra scripts."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload IL2CPP reverse-engineering output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lethal-offline-il2cpp-reverse-analysis
+          path: |
+            output/
+          compression-level: 6
+          retention-days: 30
